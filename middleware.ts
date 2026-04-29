@@ -53,6 +53,21 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(groupsUrl);
   }
 
+  // Ha be van jelentkezve de nincs nickname → /setup
+  // (kivéve ha már a /setup oldalon van)
+  if (user && pathname !== "/setup" && !isPublicRoute(pathname)) {
+    const { data: profile } = await supabase
+      .from("users")
+      .select("nickname")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile?.nickname) {
+      const setupUrl = new URL("/setup", request.url);
+      return NextResponse.redirect(setupUrl);
+    }
+  }
+
   return response;
 }
 

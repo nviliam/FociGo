@@ -69,6 +69,60 @@ export async function signInWithMagicLink(formData: FormData) {
   redirect("/login/check-email");
 }
 
+// Nickname validáció: 2-30 karakter
+const NicknameSchema = z.object({
+  nickname: z
+    .string()
+    .min(2, "A nickname legalabb 2 karakter legyen")
+    .max(30, "A nickname legfeljebb 30 karakter lehet"),
+});
+
+/**
+ * Nickname mentése az első bejelentkezés után
+ * Sikeres mentés után → /groups
+ */
+export async function updateNickname(formData: FormData) {
+  const nickname = formData.get("nickname");
+
+  const validated = NicknameSchema.safeParse({ nickname });
+  if (!validated.success) {
+    const message =
+      validated.error.issues[0]?.message ?? "Ervenytelen nickname";
+    redirect(`/setup?error=${encodeURIComponent(message)}`);
+  }
+
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const { error } = await supabase.from("users").upsert(
+    {
+      id: user.id,
+      email: user.email ?? "",
+      nickname: validated.data.nickname,
+    },
+    { onConflict: "id" },
+  );
+
+  if (error) {
+    console.error(
+      "Nickname mentesi hiba:",
+      error.message,
+      error.code,
+      error.details,
+    );
+    redirect(`/setup?error=${encodeURIComponent(error.message)}`);
+  }
+
+  redirect("/groups");
+}
+
 /**
  * Kijelentkezés
  */
