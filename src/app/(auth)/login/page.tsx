@@ -1,6 +1,5 @@
-import { signInWithGoogle } from "@/actions/auth-actions";
+﻿import { signInWithGoogle, signInWithMagicLink } from "@/actions/auth-actions";
 
-// searchParams-ból olvassuk ki, ha OAuth hiba volt
 type Props = {
   searchParams: Promise<{ error?: string }>;
 };
@@ -11,37 +10,34 @@ export default async function LoginPage({ searchParams }: Props) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-sm">
-        {/* Logo / cím */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-green-600 mb-2">⚽ FociGo</h1>
+          <h1 className="text-4xl font-bold text-green-600 mb-2">FociGo</h1>
           <p className="text-gray-500 text-sm">
             Szervezzük meg a következő meccset!
           </p>
         </div>
 
-        {/* Kártya */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
           <h2 className="text-xl font-semibold text-gray-800 mb-2 text-center">
             Bejelentkezés
           </h2>
           <p className="text-gray-500 text-sm text-center mb-6">
-            Jelentkezz be a csoportod meccseinek szervezéséhez
+            Jelentkezz be a csoportod meccseinek szervezesehez
           </p>
 
-          {/* Hibaüzenet */}
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-lg text-sm text-red-600 text-center">
-              Bejelentkezés sikertelen. Kérjük, próbáld újra.
+              {error === "invalid_email"
+                ? "Ervenytelen email cim."
+                : "Bejelentkezes sikertelen."}
             </div>
           )}
 
-          {/* Google OAuth gomb */}
           <form action={signInWithGoogle}>
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-700 font-medium hover:bg-gray-50 active:bg-gray-100 transition-colors shadow-sm"
+              className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-700 font-medium hover:bg-gray-50 transition-colors shadow-sm"
             >
-              {/* Google ikon SVG */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 48 48"
@@ -64,13 +60,42 @@ export default async function LoginPage({ searchParams }: Props) {
                   d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
                 />
               </svg>
-              Belépés Google-lal
+              Belepes Google-lal
+            </button>
+          </form>
+
+          <div className="flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-gray-200" />
+            <span className="text-xs text-gray-400">vagy</span>
+            <div className="flex-1 h-px bg-gray-200" />
+          </div>
+
+          <form action={signInWithMagicLink} className="flex flex-col gap-3">
+            <label
+              htmlFor="email"
+              className="text-sm font-medium text-gray-700"
+            >
+              Belepes email linkkel
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="nev@example.com"
+              required
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            />
+            <button
+              type="submit"
+              className="w-full bg-green-600 text-white rounded-xl px-4 py-3 text-sm font-medium hover:bg-green-700 transition-colors"
+            >
+              Magic link kuldese
             </button>
           </form>
         </div>
 
         <p className="text-center text-xs text-gray-400 mt-6">
-          Bejelentkezéssel elfogadod a használati feltételeket.
+          Bejelentkezessel elfogadod a hasznalati felteteleket.
         </p>
       </div>
     </div>
