@@ -13,14 +13,24 @@ const getBaseUrl = () => {
 /**
  * Google OAuth bejelentkezés indítása
  * A Supabase generál egy Google redirect URL-t, majd oda irányítunk
+ * Ha formData tartalmaz `next` mezőt, bejelentkezés után oda irányít vissza
  */
-export async function signInWithGoogle() {
+export async function signInWithGoogle(formData: FormData) {
   const supabase = await createClient();
+  const next = formData.get("next")?.toString() ?? "";
+
+  // Csak relatív, /join/ vagy /groups/ útvonalat engedünk — open redirect védelem
+  const safeNext =
+    next.startsWith("/join/") || next.startsWith("/groups/") ? next : "";
+
+  const callbackUrl = safeNext
+    ? `${getBaseUrl()}/auth/callback?next=${encodeURIComponent(safeNext)}`
+    : `${getBaseUrl()}/auth/callback`;
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${getBaseUrl()}/auth/callback`,
+      redirectTo: callbackUrl,
     },
   });
 
@@ -45,18 +55,27 @@ const MagicLinkSchema = z.object({
  */
 export async function signInWithMagicLink(formData: FormData) {
   const email = formData.get("email");
+  const next = formData.get("next")?.toString() ?? "";
 
   const validated = MagicLinkSchema.safeParse({ email });
   if (!validated.success) {
     redirect("/login?error=invalid_email");
   }
 
+  // Csak relatív, /join/ vagy /groups/ útvonalat engedünk — open redirect védelem
+  const safeNext =
+    next.startsWith("/join/") || next.startsWith("/groups/") ? next : "";
+
+  const callbackUrl = safeNext
+    ? `${getBaseUrl()}/auth/callback?next=${encodeURIComponent(safeNext)}`
+    : `${getBaseUrl()}/auth/callback`;
+
   const supabase = await createClient();
 
   const { error } = await supabase.auth.signInWithOtp({
     email: validated.data.email,
     options: {
-      emailRedirectTo: `${getBaseUrl()}/auth/callback`,
+      emailRedirectTo: callbackUrl,
     },
   });
 

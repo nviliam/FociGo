@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
 // Publikus route-ok — ezekhez nem kell bejelentkezés
-const PUBLIC_ROUTES = ["/login", "/auth/callback", "/match"];
+const PUBLIC_ROUTES = ["/login", "/auth/callback", "/match", "/join"];
 
 function isPublicRoute(pathname: string): boolean {
   return PUBLIC_ROUTES.some((route) => pathname.startsWith(route));

@@ -13,6 +13,8 @@ export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   const error = searchParams.get("error");
+  // next = visszairányítási útvonal (pl. /join/[token])
+  const next = searchParams.get("next") ?? "";
 
   // Ha a Google OAuth hibát adott vissza
   if (error) {
@@ -44,12 +46,21 @@ export async function GET(request: NextRequest) {
         .eq("id", user.id)
         .single();
 
+      // Csak /join/ és /groups/ útvonalakat engedünk — open redirect védelem
+      const safeNext =
+        next.startsWith("/join/") || next.startsWith("/groups/") ? next : "";
+
       // Ha nincs nickname → nickname setup oldalra
       if (!profile?.nickname) {
         return NextResponse.redirect(`${origin}/setup`);
       }
 
-      // Ha van nickname → csoportok listájára
+      // Ha van next param → oda irányítunk (pl. join oldal)
+      if (safeNext) {
+        return NextResponse.redirect(`${origin}${safeNext}`);
+      }
+
+      // Alapértelmezett: csoportok listájára
       return NextResponse.redirect(`${origin}/groups`);
     }
   }

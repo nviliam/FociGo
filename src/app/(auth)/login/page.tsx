@@ -1,11 +1,11 @@
 ﻿import { signInWithGoogle, signInWithMagicLink } from "@/actions/auth-actions";
 
 type Props = {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; next?: string }>;
 };
 
 export default async function LoginPage({ searchParams }: Props) {
-  const { error } = await searchParams;
+  const { error, next } = await searchParams;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -34,6 +34,7 @@ export default async function LoginPage({ searchParams }: Props) {
           )}
 
           <form action={signInWithGoogle}>
+            {next && <input type="hidden" name="next" value={next} />}
             <button
               type="submit"
               className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-700 font-medium hover:bg-gray-50 transition-colors shadow-sm"
@@ -71,6 +72,7 @@ export default async function LoginPage({ searchParams }: Props) {
           </div>
 
           <form action={signInWithMagicLink} className="flex flex-col gap-3">
+            {next && <input type="hidden" name="next" value={next} />}
             <label
               htmlFor="email"
               className="text-sm font-medium text-gray-700"
