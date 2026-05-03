@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getGroupById } from "@/actions/group-actions";
+import { getMatchesByGroup } from "@/actions/match-actions";
 import { createClient } from "@/lib/supabase/server";
 import { InviteLinkButton } from "@/components/features/invite-link-button";
 import { TransferAdminButton } from "@/components/features/transfer-admin-button";
+import type { Match } from "@/types";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -24,7 +26,10 @@ export default async function GroupDetailPage({ params }: Props) {
   const { id } = await params;
   const supabase = await createClient();
 
-  const group = await getGroupById(id);
+  const [group, matches] = await Promise.all([
+    getGroupById(id),
+    getMatchesByGroup(id),
+  ]);
   if (!group) notFound();
 
   // Aktuális user azonosítása (admin-e ebben a csoportban)
@@ -103,6 +108,82 @@ export default async function GroupDetailPage({ params }: Props) {
           <InviteLinkButton inviteUrl={inviteUrl} />
         </div>
       )}
+
+      {/* Meccsek listája */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-base font-semibold text-gray-800">
+            Közelgő meccsek ({matches.length})
+          </h2>
+          {isAdmin && (
+            <Link
+              href={`/groups/${id}/matches/new`}
+              className="text-sm bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors font-medium"
+            >
+              + Új meccs
+            </Link>
+          )}
+        </div>
+        {matches.length === 0 ? (
+          <p className="text-gray-400 text-sm">
+            Még nincs meccs.{" "}
+            {isAdmin && (
+              <Link
+                href={`/groups/${id}/matches/new`}
+                className="text-green-600 underline"
+              >
+                Hozz létre egyet!
+              </Link>
+            )}
+          </p>
+        ) : (
+          <ul className="divide-y divide-gray-100">
+            {(matches as Match[]).map((match) => {
+              const date = new Date(match.match_date);
+              const dateStr = date.toLocaleDateString("hu-HU", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                weekday: "long",
+              });
+              const timeStr = date.toLocaleTimeString("hu-HU", {
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+              const isPast = date < new Date();
+              return (
+                <li key={match.id} className="py-3">
+                  <Link
+                    href={`/groups/${id}/matches/${match.id}`}
+                    className="flex items-start justify-between gap-2 hover:bg-gray-50 rounded-lg -mx-2 px-2 py-1 transition-colors"
+                  >
+                    <div>
+                      <p
+                        className={`font-medium text-sm ${isPast ? "text-gray-400" : "text-gray-800"}`}
+                      >
+                        {dateStr} {timeStr}
+                      </p>
+                      <p className="text-gray-500 text-xs mt-0.5">
+                        📍 {match.venue}
+                      </p>
+                      {match.venue_fee > 0 && (
+                        <p className="text-gray-500 text-xs">
+                          💰 {match.venue_fee} Ft
+                        </p>
+                      )}
+                    </div>
+                    {isPast && (
+                      <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full shrink-0">
+                        Lejárt
+                      </span>
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
 
       {/* Tagok listája */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
