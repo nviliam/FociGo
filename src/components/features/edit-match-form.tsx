@@ -68,14 +68,13 @@ export default function EditMatchForm({ groupId, match }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      {/* Helyszín — kötelező, előtöltve a jelenlegi értékkel */}
+    <form
+      onSubmit={handleSubmit}
+      style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}
+    >
       <div>
-        <label
-          htmlFor="venue"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Helyszín <span className="text-red-500">*</span>
+        <label htmlFor="venue" className="label">
+          Helyszín <span style={{ color: "var(--accent)" }}>*</span>
         </label>
         <input
           id="venue"
@@ -84,17 +83,14 @@ export default function EditMatchForm({ groupId, match }: Props) {
           required
           defaultValue={match.venue}
           placeholder="pl. Sportcsarnok Pécs"
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="input-field"
         />
       </div>
 
-      {/* Meccs dátuma és időpontja — kötelező, előtöltve */}
       <div>
-        <label
-          htmlFor="match_date"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Meccs dátuma és időpontja <span className="text-red-500">*</span>
+        <label htmlFor="match_date" className="label">
+          Meccs dátuma és időpontja{" "}
+          <span style={{ color: "var(--accent)" }}>*</span>
         </label>
         <input
           id="match_date"
@@ -102,18 +98,16 @@ export default function EditMatchForm({ groupId, match }: Props) {
           type="datetime-local"
           required
           defaultValue={toLocalDatetimeInput(match.match_date)}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="input-field"
         />
       </div>
 
-      {/* Terembér — opcionális, előtöltve */}
       <div>
-        <label
-          htmlFor="venue_fee"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
+        <label htmlFor="venue_fee" className="label">
           Terembér (Ft){" "}
-          <span className="text-gray-400 font-normal">(opcionális)</span>
+          <span style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>
+            (opcionális)
+          </span>
         </label>
         <input
           id="venue_fee"
@@ -127,50 +121,67 @@ export default function EditMatchForm({ groupId, match }: Props) {
               : ""
           }
           placeholder="pl. 10000"
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="input-field"
         />
       </div>
 
-      {/* RSVP határidő — opcionális, előtöltve ha volt */}
       <div>
-        <label
-          htmlFor="rsvp_deadline"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
+        <label htmlFor="rsvp_deadline" className="label">
           RSVP határidő{" "}
-          <span className="text-gray-400 font-normal">(opcionális)</span>
+          <span style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>
+            (opcionális)
+          </span>
         </label>
         <input
           id="rsvp_deadline"
           name="rsvp_deadline"
           type="datetime-local"
           defaultValue={toLocalDatetimeInput(match.rsvp_deadline)}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="input-field"
         />
-        <p className="text-xs text-gray-400 mt-1">
+        <p
+          style={{
+            fontSize: "0.72rem",
+            color: "var(--text-muted)",
+            marginTop: "0.35rem",
+          }}
+        >
           A határidő után a visszajelzések lezárulnak és az ár rögzül.
         </p>
       </div>
 
-      {/* Hibaüzenet */}
       {error && (
-        <div className="p-3 bg-red-50 border border-red-100 rounded-lg text-sm text-red-600">
+        <div
+          style={{
+            padding: "0.75rem",
+            background: "var(--notgoing-bg)",
+            border: "1px solid var(--notgoing-border)",
+            borderRadius: "0.75rem",
+            fontSize: "0.82rem",
+            color: "var(--notgoing-text)",
+          }}
+        >
           {error}
         </div>
       )}
 
-      {/* Gombok */}
-      <div className="flex gap-3 pt-2">
+      <div style={{ display: "flex", gap: "0.75rem" }}>
         <button
           type="submit"
           disabled={isPending}
-          className="flex-1 bg-green-600 text-white rounded-xl px-4 py-3 font-medium hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="btn-primary"
+          style={{ flex: 1, textAlign: "center" }}
         >
           {isPending ? "Mentés..." : "Változtatások mentése"}
         </button>
         <a
           href={`/groups/${groupId}/matches/${match.id}`}
-          className="px-4 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors text-center"
+          className="btn-secondary"
+          style={{
+            padding: "0.75rem 1.25rem",
+            textDecoration: "none",
+            textAlign: "center",
+          }}
         >
           Mégse
         </a>

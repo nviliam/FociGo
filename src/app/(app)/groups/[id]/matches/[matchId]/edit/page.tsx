@@ -54,21 +54,47 @@ export default async function EditMatchPage({ params }: Props) {
   }
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-8 space-y-6">
-      {/* Fejléc */}
-      <div>
-        <a
-          href={`/groups/${groupId}/matches/${matchId}`}
-          className="text-sm text-gray-500 hover:text-gray-700 mb-1 block"
-        >
-          ← Vissza a meccshez
-        </a>
-        <h1 className="text-2xl font-bold text-gray-900">Meccs szerkesztése</h1>
-        <p className="text-sm text-gray-500 mt-1">{group.name}</p>
-      </div>
-
-      {/* Szerkesztő form — előtöltve a jelenlegi meccs adataival */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+    <div style={{ maxWidth: "36rem", margin: "0 auto", padding: "2rem 1rem" }}>
+      <a
+        href={`/groups/${groupId}/matches/${matchId}`}
+        style={{
+          fontSize: "0.82rem",
+          color: "var(--text-secondary)",
+          textDecoration: "none",
+          display: "inline-block",
+          marginBottom: "1.5rem",
+        }}
+      >
+        ← Vissza a meccshez
+      </a>
+      <h1
+        style={{
+          fontSize: "1.75rem",
+          fontWeight: 800,
+          color: "var(--text-primary)",
+          letterSpacing: "-0.03em",
+          marginBottom: "0.25rem",
+        }}
+      >
+        Meccs szerkesztése
+      </h1>
+      <p
+        style={{
+          color: "var(--text-secondary)",
+          fontSize: "0.85rem",
+          marginBottom: "2rem",
+        }}
+      >
+        {group.name}
+      </p>
+      <div
+        style={{
+          background: "var(--bg-card)",
+          border: "1px solid var(--border)",
+          borderRadius: "1.25rem",
+          padding: "1.75rem",
+        }}
+      >
         <EditMatchForm groupId={groupId} match={match} />
       </div>
     </div>

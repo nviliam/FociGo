@@ -30,53 +30,112 @@ export default async function SetupPage({ searchParams }: Props) {
   const { error } = await searchParams;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-green-600 mb-2">FociGo</h1>
-          <p className="text-gray-500 text-sm">Majdnem kesz!</p>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem",
+      }}
+    >
+      <div style={{ width: "100%", maxWidth: "24rem" }}>
+        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+          <div style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>⚽</div>
+          <h1
+            style={{
+              fontSize: "1.5rem",
+              fontWeight: 800,
+              color: "var(--accent)",
+              letterSpacing: "-0.03em",
+            }}
+          >
+            FociGo
+          </h1>
+          <p
+            style={{
+              color: "var(--text-secondary)",
+              fontSize: "0.85rem",
+              marginTop: "0.3rem",
+            }}
+          >
+            Már csak egy lépés!
+          </p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2 text-center">
-            Valassz nicknevet!
+        <div
+          style={{
+            background: "var(--bg-card)",
+            border: "1px solid var(--border)",
+            borderRadius: "1.25rem",
+            padding: "2rem",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "1.1rem",
+              fontWeight: 700,
+              color: "var(--text-primary)",
+              textAlign: "center",
+              marginBottom: "0.4rem",
+            }}
+          >
+            Válassz nicknevet!
           </h2>
-          <p className="text-gray-500 text-sm text-center mb-6">
-            Ez a nev fog megjelenni a csoportodban az RSVP-listaban. (2-30
-            karakter)
+          <p
+            style={{
+              color: "var(--text-secondary)",
+              fontSize: "0.82rem",
+              textAlign: "center",
+              marginBottom: "1.5rem",
+            }}
+          >
+            Ez a név jelenik meg a csoportban az RSVP-listában. (2–30 karakter)
           </p>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-lg text-sm text-red-600 text-center">
+            <div
+              style={{
+                marginBottom: "1rem",
+                padding: "0.75rem",
+                background: "var(--notgoing-bg)",
+                border: "1px solid var(--notgoing-border)",
+                borderRadius: "0.75rem",
+                fontSize: "0.82rem",
+                color: "var(--notgoing-text)",
+                textAlign: "center",
+              }}
+            >
               {error === "save_failed"
-                ? "Mentes sikertelen. Kerem probald ujra."
+                ? "Mentés sikertelen. Kérjük próbáld újra."
                 : decodeURIComponent(error)}
             </div>
           )}
 
-          <form action={updateNickname} className="flex flex-col gap-3">
-            <label
-              htmlFor="nickname"
-              className="text-sm font-medium text-gray-700"
-            >
+          <form
+            action={updateNickname}
+            style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}
+          >
+            <label htmlFor="nickname" className="label">
               Nickname
             </label>
             <input
               id="nickname"
               name="nickname"
               type="text"
-              placeholder="pl. Kovacs Jani"
+              placeholder="pl. Kovács Jani"
               minLength={2}
               maxLength={30}
               required
               autoFocus
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="input-field"
             />
             <button
               type="submit"
-              className="w-full bg-green-600 text-white rounded-xl px-4 py-3 text-sm font-medium hover:bg-green-700 active:bg-green-800 transition-colors"
+              className="btn-primary"
+              style={{ width: "100%", textAlign: "center" }}
             >
-              Mentes es tovabb
+              Mentés és tovább →
             </button>
           </form>
         </div>

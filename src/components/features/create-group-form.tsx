@@ -29,14 +29,13 @@ export default function CreateGroupForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      {/* Csoport neve — kötelező */}
+    <form
+      onSubmit={handleSubmit}
+      style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}
+    >
       <div>
-        <label
-          htmlFor="name"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Csoport neve <span className="text-red-500">*</span>
+        <label htmlFor="name" className="label">
+          Csoport neve <span style={{ color: "var(--accent)" }}>*</span>
         </label>
         <input
           id="name"
@@ -44,54 +43,48 @@ export default function CreateGroupForm() {
           type="text"
           required
           placeholder="pl. Szerda esti foci"
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="input-field"
         />
       </div>
 
-      {/* Default helyszín — opcionális */}
       <div>
-        <label
-          htmlFor="default_venue"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
+        <label htmlFor="default_venue" className="label">
           Default helyszín{" "}
-          <span className="text-gray-400 font-normal">(opcionális)</span>
+          <span style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>
+            (opcionális)
+          </span>
         </label>
         <input
           id="default_venue"
           name="default_venue"
           type="text"
           placeholder="pl. Sportcsarnok Pécs"
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="input-field"
         />
       </div>
 
-      {/* Default menetrend — opcionális */}
       <div>
-        <label
-          htmlFor="default_schedule"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
+        <label htmlFor="default_schedule" className="label">
           Default menetrend{" "}
-          <span className="text-gray-400 font-normal">(opcionális)</span>
+          <span style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>
+            (opcionális)
+          </span>
         </label>
         <input
           id="default_schedule"
           name="default_schedule"
           type="text"
           placeholder="pl. minden szerda 18:00"
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="input-field"
         />
       </div>
 
-      {/* Default terembérlési díj — opcionális */}
       <div>
-        <label
-          htmlFor="default_venue_fee"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
+        <label htmlFor="default_venue_fee" className="label">
           Default terembérlési díj (Ft){" "}
-          <span className="text-gray-400 font-normal">(opcionális)</span>
+          <span style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>
+            (opcionális)
+          </span>
         </label>
         <input
           id="default_venue_fee"
@@ -100,22 +93,30 @@ export default function CreateGroupForm() {
           min="0"
           step="1"
           placeholder="pl. 10000"
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="input-field"
         />
       </div>
 
-      {/* Hibaüzenet */}
       {error && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+        <div
+          style={{
+            padding: "0.75rem",
+            background: "var(--notgoing-bg)",
+            border: "1px solid var(--notgoing-border)",
+            borderRadius: "0.75rem",
+            fontSize: "0.82rem",
+            color: "var(--notgoing-text)",
+          }}
+        >
           {error}
-        </p>
+        </div>
       )}
 
-      {/* Submit gomb */}
       <button
         type="submit"
         disabled={isPending}
-        className="w-full bg-green-600 text-white py-2.5 rounded-lg font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="btn-primary"
+        style={{ width: "100%", textAlign: "center" }}
       >
         {isPending ? "Létrehozás..." : "Csoport létrehozása"}
       </button>

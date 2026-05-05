@@ -30,13 +30,38 @@ export default async function JoinPage({ params }: Props) {
 
   if (error || !groupRows || groupRows.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 max-w-sm w-full text-center">
-          <div className="text-4xl mb-4">❌</div>
-          <h1 className="text-xl font-semibold text-gray-800 mb-2">
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "1rem",
+        }}
+      >
+        <div
+          style={{
+            background: "var(--bg-card)",
+            border: "1px solid var(--border)",
+            borderRadius: "1.25rem",
+            padding: "2rem",
+            maxWidth: "24rem",
+            width: "100%",
+            textAlign: "center",
+          }}
+        >
+          <div style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>❌</div>
+          <h1
+            style={{
+              fontSize: "1.2rem",
+              fontWeight: 700,
+              color: "var(--text-primary)",
+              marginBottom: "0.5rem",
+            }}
+          >
             Érvénytelen meghívó
           </h1>
-          <p className="text-gray-500 text-sm">
+          <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>
             Ez a meghívó link nem létezik vagy lejárt.
           </p>
         </div>
@@ -66,41 +91,89 @@ export default async function JoinPage({ params }: Props) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-green-600 mb-2">FociGo</h1>
-          <p className="text-gray-500 text-sm">Focimeccs szervező</p>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem",
+      }}
+    >
+      <div style={{ width: "100%", maxWidth: "24rem" }}>
+        <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+          <div style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>⚽</div>
+          <h1
+            style={{
+              fontSize: "1.5rem",
+              fontWeight: 800,
+              color: "var(--accent)",
+              letterSpacing: "-0.03em",
+            }}
+          >
+            FociGo
+          </h1>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-          <div className="text-center mb-6">
-            <div className="text-4xl mb-3">⚽</div>
-            <h2 className="text-xl font-semibold text-gray-800 mb-1">
-              Meghívó
-            </h2>
-            <p className="text-gray-500 text-sm">Csatlakozz a csoporthoz:</p>
-            <p className="text-green-600 font-bold text-lg mt-2">
-              {group.name}
-            </p>
-          </div>
+        <div
+          style={{
+            background: "var(--bg-card)",
+            border: "1px solid var(--border)",
+            borderRadius: "1.25rem",
+            padding: "2rem",
+            textAlign: "center",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "1.1rem",
+              fontWeight: 700,
+              color: "var(--text-primary)",
+              marginBottom: "0.4rem",
+            }}
+          >
+            Meghívó
+          </h2>
+          <p
+            style={{
+              color: "var(--text-secondary)",
+              fontSize: "0.85rem",
+              marginBottom: "0.5rem",
+            }}
+          >
+            Csatlakozz a csoporthoz:
+          </p>
+          <p
+            style={{
+              color: "var(--accent)",
+              fontWeight: 800,
+              fontSize: "1.2rem",
+              marginBottom: "1.75rem",
+            }}
+          >
+            {group.name}
+          </p>
 
           {user ? (
-            /* Bejelentkezett: csatlakozás gomb */
             <form action={joinGroupByToken}>
               <input type="hidden" name="token" value={token} />
               <button
                 type="submit"
-                className="w-full bg-green-600 text-white rounded-xl px-4 py-3 font-medium hover:bg-green-700 transition-colors"
+                className="btn-primary"
+                style={{ width: "100%", textAlign: "center" }}
               >
                 Csatlakozás
               </button>
             </form>
           ) : (
-            /* Nem bejelentkezett: login link next param-mal */
             <a
               href={`/login?next=/join/${token}`}
-              className="block w-full bg-green-600 text-white rounded-xl px-4 py-3 font-medium hover:bg-green-700 transition-colors text-center"
+              className="btn-primary"
+              style={{
+                display: "block",
+                textDecoration: "none",
+                textAlign: "center",
+              }}
             >
               Bejelentkezés és csatlakozás
             </a>

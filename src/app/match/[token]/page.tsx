@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getMatchByPublicToken } from "@/actions/match-actions";
+import { getRsvpsByMatchPublic } from "@/actions/rsvp-actions";
 
 type Props = {
   params: Promise<{ token: string }>;
@@ -33,9 +34,12 @@ type Props = {
  */
 export default async function PublicMatchPage({ params }: Props) {
   const { token } = await params;
-  const match = await getMatchByPublicToken(token);
 
+  const match = await getMatchByPublicToken(token);
   if (!match) notFound();
+
+  // RSVP lista lekérése — auth nélkül, anon Supabase kulccsal
+  const matchRsvps = await getRsvpsByMatchPublic(match.id);
 
   // Dátum formázás — hu-HU locale, olvasható formátum
   const matchDateFormatted = new Date(match.match_date).toLocaleString(
@@ -69,77 +73,274 @@ export default async function PublicMatchPage({ params }: Props) {
       : "Ingyenes";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
-      <div className="max-w-lg mx-auto px-4 py-12 space-y-6">
-        {/* FociGo brand */}
-        <div className="text-center mb-8">
-          <span className="text-3xl font-bold text-green-700">⚽ FociGo</span>
-          <p className="text-gray-500 text-sm mt-1">Meccs részletei</p>
+    <div style={{ minHeight: "100vh", background: "var(--bg-base)" }}>
+      <div
+        style={{
+          maxWidth: "40rem",
+          margin: "0 auto",
+          padding: "3rem 1rem",
+          display: "flex",
+          flexDirection: "column",
+          gap: "1.25rem",
+        }}
+      >
+        {/* FociGo brand fejléc */}
+        <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+          <div style={{ fontSize: "2rem", marginBottom: "0.25rem" }}>⚽</div>
+          <h1
+            style={{
+              fontSize: "1.5rem",
+              fontWeight: 800,
+              color: "var(--accent)",
+              letterSpacing: "-0.03em",
+            }}
+          >
+            FociGo
+          </h1>
+          <p
+            style={{
+              color: "var(--text-muted)",
+              fontSize: "0.82rem",
+              marginTop: "0.2rem",
+            }}
+          >
+            Meccs részletei
+          </p>
         </div>
 
         {/* Meccs adatok */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm divide-y divide-gray-50">
-          <div className="px-5 py-4">
-            <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">
-              Helyszín
-            </p>
-            <p className="text-gray-900 font-medium text-lg">{match.venue}</p>
-          </div>
-
-          <div className="px-5 py-4">
-            <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">
-              Időpont
-            </p>
-            <p className="text-gray-900 font-medium">{matchDateFormatted}</p>
-          </div>
-
-          <div className="px-5 py-4">
-            <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">
-              Terembér
-            </p>
-            <p className="text-gray-900 font-medium">{venueFeeFormatted}</p>
-          </div>
-
-          <div className="px-5 py-4">
-            <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">
+        <div
+          style={{
+            background: "var(--bg-card)",
+            border: "1px solid var(--border)",
+            borderRadius: "1.25rem",
+            overflow: "hidden",
+          }}
+        >
+          {[
+            { label: "Helyszín", value: match.venue },
+            { label: "Időpont", value: matchDateFormatted },
+            {
+              label: "Terembér",
+              value: venueFeeFormatted,
+              accent: match.venue_fee > 0,
+            },
+          ].map((row, i) => (
+            <div
+              key={row.label}
+              style={{
+                padding: "1rem 1.25rem",
+                borderTop: i > 0 ? "1px solid var(--border)" : "none",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "0.7rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  color: "var(--text-muted)",
+                  marginBottom: "0.3rem",
+                }}
+              >
+                {row.label}
+              </p>
+              <p
+                style={{
+                  fontWeight: 600,
+                  color: row.accent ? "var(--accent)" : "var(--text-primary)",
+                }}
+              >
+                {row.value}
+              </p>
+            </div>
+          ))}
+          <div
+            style={{
+              padding: "1rem 1.25rem",
+              borderTop: "1px solid var(--border)",
+            }}
+          >
+            <p
+              style={{
+                fontSize: "0.7rem",
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                color: "var(--text-muted)",
+                marginBottom: "0.3rem",
+              }}
+            >
               RSVP határidő
             </p>
             {rsvpDeadlineFormatted ? (
-              <div className="flex items-center gap-2">
-                <p className="text-gray-900 font-medium">
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+              >
+                <p style={{ fontWeight: 600, color: "var(--text-primary)" }}>
                   {rsvpDeadlineFormatted}
                 </p>
-                {rsvpExpired && (
-                  <span className="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full">
-                    Lejárt
-                  </span>
-                )}
+                {rsvpExpired && <span className="badge-notgoing">Lejárt</span>}
               </div>
             ) : (
-              <p className="text-gray-400 italic">Nincs beállítva</p>
+              <p style={{ color: "var(--text-muted)", fontStyle: "italic" }}>
+                Nincs beállítva
+              </p>
             )}
           </div>
         </div>
 
-        {/* RSVP szekció — Epic 5-ben feltöltendő */}
-        <div className="bg-gray-50 rounded-2xl border border-dashed border-gray-200 px-5 py-6 text-center space-y-3">
-          <p className="text-gray-500 font-medium">Visszajelzők</p>
-          <p className="text-gray-400 text-sm">
-            A visszajelzések hamarosan itt jelennek meg.
-          </p>
+        {/* RSVP szekció */}
+        <div
+          style={{
+            background: "var(--bg-card)",
+            border: "1px solid var(--border)",
+            borderRadius: "1.25rem",
+            padding: "1.25rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.75rem",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "0.9rem",
+              fontWeight: 700,
+              color: "var(--text-primary)",
+            }}
+          >
+            Visszajelzések
+          </h2>
+
+          {matchRsvps.length > 0 && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "0.75rem 1rem",
+                background: "rgba(0,230,118,0.05)",
+                border: "1px solid var(--accent-border)",
+                borderRadius: "0.75rem",
+              }}
+            >
+              <span style={{ fontSize: "0.85rem" }}>
+                <span style={{ color: "var(--going-text)", fontWeight: 700 }}>
+                  {matchRsvps.filter((r) => r.status === "going").length} jön
+                </span>
+                {matchRsvps.filter((r) => r.status === "not_going").length >
+                  0 && (
+                  <span style={{ color: "var(--text-muted)" }}>
+                    {" "}
+                    ·{" "}
+                    {
+                      matchRsvps.filter((r) => r.status === "not_going").length
+                    }{" "}
+                    nem jön
+                  </span>
+                )}
+              </span>
+              {match.venue_fee > 0 &&
+                matchRsvps.filter((r) => r.status === "going").length > 0 && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: "0.9rem",
+                        fontWeight: 800,
+                        color: "var(--accent)",
+                      }}
+                    >
+                      {Math.ceil(
+                        match.venue_fee /
+                          matchRsvps.filter((r) => r.status === "going").length,
+                      ).toLocaleString("hu-HU")}{" "}
+                      Ft / fő
+                    </span>
+                    {rsvpExpired && (
+                      <span className="badge-going">Végleges ár</span>
+                    )}
+                  </div>
+                )}
+            </div>
+          )}
+
+          {matchRsvps.length === 0 ? (
+            <p
+              style={{
+                color: "var(--text-muted)",
+                fontSize: "0.85rem",
+                textAlign: "center",
+                padding: "1.5rem 0",
+              }}
+            >
+              Még senki nem jelzett vissza.
+            </p>
+          ) : (
+            <ul style={{ display: "flex", flexDirection: "column" }}>
+              {matchRsvps.map((rsvp, i) => (
+                <li
+                  key={rsvp.id}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "0.6rem 0",
+                    borderTop: i > 0 ? "1px solid var(--border)" : "none",
+                  }}
+                >
+                  <span
+                    style={{ fontSize: "0.9rem", color: "var(--text-primary)" }}
+                  >
+                    {rsvp.users?.nickname ?? "Ismeretlen"}
+                  </span>
+                  {rsvp.status === "going" ? (
+                    <span className="badge-going">✓ Jövök</span>
+                  ) : (
+                    <span className="badge-notgoing">✗ Nem jövök</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         {/* Login CTA */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-5 text-center space-y-3">
-          <p className="text-gray-700 font-medium">
+        <div
+          style={{
+            background: "var(--bg-card)",
+            border: "1px solid var(--accent-border)",
+            borderRadius: "1.25rem",
+            padding: "1.5rem",
+            textAlign: "center",
+            boxShadow: "0 0 24px var(--accent-glow)",
+          }}
+        >
+          <p
+            style={{
+              color: "var(--text-primary)",
+              fontWeight: 700,
+              marginBottom: "0.4rem",
+            }}
+          >
             Részese vagy te is a meccsnek?
           </p>
-          <p className="text-gray-500 text-sm">
+          <p
+            style={{
+              color: "var(--text-secondary)",
+              fontSize: "0.85rem",
+              marginBottom: "1rem",
+            }}
+          >
             Jelentkezz be, hogy visszajelzést adhass.
           </p>
           <a
             href="/login"
-            className="inline-block bg-green-600 text-white rounded-xl px-6 py-2.5 font-medium hover:bg-green-700 transition-colors"
+            className="btn-primary"
+            style={{ display: "inline-block", textDecoration: "none" }}
           >
             Bejelentkezés
           </a>

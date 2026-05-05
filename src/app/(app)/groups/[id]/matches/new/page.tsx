@@ -41,21 +41,47 @@ export default async function NewMatchPage({ params }: Props) {
   };
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-8">
-      <div className="mb-6">
-        <a
-          href={`/groups/${id}`}
-          className="text-sm text-gray-500 hover:text-gray-700 inline-flex items-center gap-1"
-        >
-          ← {g.name}
-        </a>
-        <h1 className="text-2xl font-bold text-gray-900 mt-2">Új meccs</h1>
-        <p className="text-gray-500 text-sm mt-1">
-          A csoport default értékei előtöltve — minden mező felülírható.
-        </p>
-      </div>
-
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+    <div style={{ maxWidth: "36rem", margin: "0 auto", padding: "2rem 1rem" }}>
+      <a
+        href={`/groups/${id}`}
+        style={{
+          fontSize: "0.82rem",
+          color: "var(--text-secondary)",
+          textDecoration: "none",
+          display: "inline-block",
+          marginBottom: "1.5rem",
+        }}
+      >
+        ← {g.name}
+      </a>
+      <h1
+        style={{
+          fontSize: "1.75rem",
+          fontWeight: 800,
+          color: "var(--text-primary)",
+          letterSpacing: "-0.03em",
+          marginBottom: "0.4rem",
+        }}
+      >
+        Új meccs
+      </h1>
+      <p
+        style={{
+          color: "var(--text-secondary)",
+          fontSize: "0.85rem",
+          marginBottom: "2rem",
+        }}
+      >
+        A csoport default értékei előtöltve — minden mező felülírható.
+      </p>
+      <div
+        style={{
+          background: "var(--bg-card)",
+          border: "1px solid var(--border)",
+          borderRadius: "1.25rem",
+          padding: "1.75rem",
+        }}
+      >
         <CreateMatchForm
           groupId={id}
           defaultVenue={g.default_venue}

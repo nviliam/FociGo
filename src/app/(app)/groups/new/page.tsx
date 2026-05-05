@@ -3,27 +3,49 @@ import CreateGroupForm from "@/components/features/create-group-form";
 
 export default function NewGroupPage() {
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-lg mx-auto">
-        {/* Fejléc */}
-        <div className="flex items-center gap-3 mb-6">
-          <Link
-            href="/groups"
-            className="text-gray-500 hover:text-gray-700 transition-colors"
-          >
-            ← Vissza
-          </Link>
-          <h1 className="text-2xl font-bold text-gray-900">Új csoport</h1>
-        </div>
-
-        {/* Form kártya */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <p className="text-sm text-gray-500 mb-5">
-            A default beállítások automatikusan előtöltődnek minden új meccshez
-            — meccs szinten felülírhatók.
-          </p>
-          <CreateGroupForm />
-        </div>
+    <div style={{ maxWidth: "36rem", margin: "0 auto", padding: "2rem 1rem" }}>
+      <Link
+        href="/groups"
+        style={{
+          fontSize: "0.82rem",
+          color: "var(--text-secondary)",
+          textDecoration: "none",
+          display: "inline-block",
+          marginBottom: "1.5rem",
+        }}
+      >
+        ← Csoportok
+      </Link>
+      <h1
+        style={{
+          fontSize: "1.75rem",
+          fontWeight: 800,
+          color: "var(--text-primary)",
+          letterSpacing: "-0.03em",
+          marginBottom: "0.4rem",
+        }}
+      >
+        Új csoport
+      </h1>
+      <p
+        style={{
+          color: "var(--text-secondary)",
+          fontSize: "0.85rem",
+          marginBottom: "2rem",
+        }}
+      >
+        A default beállítások minden új meccsnél előtöltődnek — meccs szinten
+        felülírhatók.
+      </p>
+      <div
+        style={{
+          background: "var(--bg-card)",
+          border: "1px solid var(--border)",
+          borderRadius: "1.25rem",
+          padding: "1.75rem",
+        }}
+      >
+        <CreateGroupForm />
       </div>
     </div>
   );

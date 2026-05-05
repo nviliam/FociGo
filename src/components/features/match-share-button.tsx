@@ -32,19 +32,44 @@ export function MatchShareButton({ matchUrl }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2">
-        <span className="text-sm text-gray-600 truncate flex-1 font-mono">
+    <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          background: "rgba(255,255,255,0.04)",
+          border: "1px solid var(--border)",
+          borderRadius: "0.75rem",
+          padding: "0.6rem 0.75rem",
+        }}
+      >
+        <span
+          style={{
+            fontSize: "0.78rem",
+            color: "var(--text-secondary)",
+            flex: 1,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            fontFamily: "monospace",
+          }}
+        >
           {matchUrl}
         </span>
         <button
           onClick={handleCopy}
-          className="shrink-0 bg-green-600 text-white text-sm px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors font-medium"
+          className={copied ? "btn-secondary" : "btn-primary"}
+          style={{
+            flexShrink: 0,
+            fontSize: "0.78rem",
+            padding: "0.4rem 0.85rem",
+          }}
         >
           {copied ? "✓ Másolva!" : "Link másolása"}
         </button>
       </div>
-      <p className="text-xs text-gray-400">
+      <p style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
         Ez a link bejelentkezés nélkül is megtekinthető. Küldd el WhatsApp-on!
       </p>
     </div>

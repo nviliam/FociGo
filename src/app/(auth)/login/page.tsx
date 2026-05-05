@@ -8,41 +8,131 @@ export default async function LoginPage({ searchParams }: Props) {
   const { error, next } = await searchParams;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-green-600 mb-2">FociGo</h1>
-          <p className="text-gray-500 text-sm">
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      {/* Háttér ragyogás */}
+      <div
+        style={{
+          position: "absolute",
+          top: "20%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "600px",
+          height: "600px",
+          background:
+            "radial-gradient(circle, rgba(0,230,118,0.06) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <div style={{ width: "100%", maxWidth: "26rem", position: "relative" }}>
+        {/* Brand */}
+        <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
+          <div style={{ fontSize: "3rem", marginBottom: "0.5rem" }}>⚽</div>
+          <h1
+            style={{
+              fontSize: "2.5rem",
+              fontWeight: 800,
+              color: "var(--accent)",
+              letterSpacing: "-0.04em",
+              lineHeight: 1,
+              marginBottom: "0.5rem",
+            }}
+          >
+            FociGo
+          </h1>
+          <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem" }}>
             Szervezzük meg a következő meccset!
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2 text-center">
+        {/* Kártya */}
+        <div
+          style={{
+            background: "var(--bg-card)",
+            border: "1px solid var(--border)",
+            borderRadius: "1.25rem",
+            padding: "2rem",
+            boxShadow:
+              "0 0 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03)",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "1.1rem",
+              fontWeight: 600,
+              color: "var(--text-primary)",
+              textAlign: "center",
+              marginBottom: "0.4rem",
+            }}
+          >
             Bejelentkezés
           </h2>
-          <p className="text-gray-500 text-sm text-center mb-6">
-            Jelentkezz be a csoportod meccseinek szervezesehez
+          <p
+            style={{
+              color: "var(--text-secondary)",
+              fontSize: "0.82rem",
+              textAlign: "center",
+              marginBottom: "1.75rem",
+            }}
+          >
+            Lépj be a csoportod meccseinek szervezéséhez
           </p>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-lg text-sm text-red-600 text-center">
+            <div
+              style={{
+                marginBottom: "1rem",
+                padding: "0.75rem 1rem",
+                background: "var(--notgoing-bg)",
+                border: "1px solid var(--notgoing-border)",
+                borderRadius: "0.75rem",
+                fontSize: "0.82rem",
+                color: "var(--notgoing-text)",
+                textAlign: "center",
+              }}
+            >
               {error === "invalid_email"
-                ? "Ervenytelen email cim."
-                : "Bejelentkezes sikertelen."}
+                ? "Érvénytelen email cím."
+                : "Bejelentkezés sikertelen."}
             </div>
           )}
 
+          {/* Google gomb */}
           <form action={signInWithGoogle}>
             {next && <input type="hidden" name="next" value={next} />}
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-700 font-medium hover:bg-gray-50 transition-colors shadow-sm"
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "0.75rem",
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid var(--border)",
+                borderRadius: "0.75rem",
+                padding: "0.8rem 1rem",
+                color: "var(--text-primary)",
+                fontWeight: 500,
+                fontSize: "0.9rem",
+                cursor: "pointer",
+                transition: "all 0.2s",
+              }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 48 48"
-                className="w-5 h-5"
+                style={{ width: "1.1rem", height: "1.1rem" }}
               >
                 <path
                   fill="#EA4335"
@@ -61,23 +151,37 @@ export default async function LoginPage({ searchParams }: Props) {
                   d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
                 />
               </svg>
-              Belepes Google-lal
+              Belépés Google-lal
             </button>
           </form>
 
-          <div className="flex items-center gap-3 my-5">
-            <div className="flex-1 h-px bg-gray-200" />
-            <span className="text-xs text-gray-400">vagy</span>
-            <div className="flex-1 h-px bg-gray-200" />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem",
+              margin: "1.5rem 0",
+            }}
+          >
+            <div
+              style={{ flex: 1, height: "1px", background: "var(--border)" }}
+            />
+            <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+              vagy
+            </span>
+            <div
+              style={{ flex: 1, height: "1px", background: "var(--border)" }}
+            />
           </div>
 
-          <form action={signInWithMagicLink} className="flex flex-col gap-3">
+          {/* Magic link */}
+          <form
+            action={signInWithMagicLink}
+            style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}
+          >
             {next && <input type="hidden" name="next" value={next} />}
-            <label
-              htmlFor="email"
-              className="text-sm font-medium text-gray-700"
-            >
-              Belepes email linkkel
+            <label htmlFor="email" className="label">
+              Belépés email linkkel
             </label>
             <input
               id="email"
@@ -85,19 +189,27 @@ export default async function LoginPage({ searchParams }: Props) {
               type="email"
               placeholder="nev@example.com"
               required
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="input-field"
             />
             <button
               type="submit"
-              className="w-full bg-green-600 text-white rounded-xl px-4 py-3 text-sm font-medium hover:bg-green-700 transition-colors"
+              className="btn-primary"
+              style={{ width: "100%", textAlign: "center" }}
             >
-              Magic link kuldese
+              Magic link küldése
             </button>
           </form>
         </div>
 
-        <p className="text-center text-xs text-gray-400 mt-6">
-          Bejelentkezessel elfogadod a hasznalati felteteleket.
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: "0.72rem",
+            color: "var(--text-muted)",
+            marginTop: "1.5rem",
+          }}
+        >
+          Belépéssel elfogadod a használati feltételeket.
         </p>
       </div>
     </div>

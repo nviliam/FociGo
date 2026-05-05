@@ -1,16 +1,46 @@
 export default function CheckEmailPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-sm text-center">
-        <div className="text-5xl mb-4">📧</div>
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem",
+      }}
+    >
+      <div style={{ width: "100%", maxWidth: "24rem", textAlign: "center" }}>
+        <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>📧</div>
+        <h1
+          style={{
+            fontSize: "1.5rem",
+            fontWeight: 800,
+            color: "var(--text-primary)",
+            letterSpacing: "-0.03em",
+            marginBottom: "0.5rem",
+          }}
+        >
           Ellenőrizd az emailedet!
         </h1>
-        <p className="text-gray-500 text-sm mb-6">
-          Küldtünk egy bejelentkezési linket. Kattints rá a belépéshez — a link
+        <p
+          style={{
+            color: "var(--text-secondary)",
+            fontSize: "0.9rem",
+            marginBottom: "2rem",
+            lineHeight: 1.6,
+          }}
+        >
+          Küldünk egy bejelentkezési linket. Kattints rá a belépéshez — a link
           24 óráig érvényes.
         </p>
-        <a href="/login" className="text-sm text-green-600 hover:underline">
+        <a
+          href="/login"
+          style={{
+            fontSize: "0.85rem",
+            color: "var(--accent)",
+            textDecoration: "none",
+          }}
+        >
           ← Vissza a bejelentkezéshez
         </a>
       </div>

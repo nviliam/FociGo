@@ -3,7 +3,11 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getMatchById } from "@/actions/match-actions";
 import { getGroupById } from "@/actions/group-actions";
+import { getRsvpsByMatch } from "@/actions/rsvp-actions";
 import { MatchShareButton } from "@/components/features/match-share-button";
+import { RsvpButtons } from "@/components/features/rsvp-buttons";
+import { RsvpList } from "@/components/features/rsvp-list";
+import type { RsvpStatus } from "@/types";
 
 type Props = {
   params: Promise<{ id: string; matchId: string }>;
@@ -29,9 +33,10 @@ export default async function MatchDetailPage({ params }: Props) {
   const { id: groupId, matchId } = await params;
 
   // Párhuzamos lekérés — gyorsabb mint egymás után
-  const [match, group] = await Promise.all([
+  const [match, group, rsvps] = await Promise.all([
     getMatchById(matchId),
     getGroupById(groupId),
+    getRsvpsByMatch(matchId),
   ]);
 
   if (!match || !group) notFound();
@@ -52,6 +57,13 @@ export default async function MatchDetailPage({ params }: Props) {
     : { data: null };
 
   const isAdmin = membership?.is_admin === true;
+
+  // Saját RSVP státusz kinyerése
+  const myRsvp = user ? rsvps.find((r) => r.user_id === user.id) : null;
+  const myRsvpStatus: RsvpStatus | null = myRsvp?.status ?? null;
+
+  // Tagság ellenőrzés (RSVP gombok megjelenítéséhez)
+  const isMember = !!membership;
 
   // Nyilvános meccs URL összeállítása
   const baseUrl =
@@ -95,85 +107,204 @@ export default async function MatchDetailPage({ params }: Props) {
       : "Ingyenes";
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-8 space-y-6">
+    <div
+      style={{
+        maxWidth: "40rem",
+        margin: "0 auto",
+        padding: "2rem 1rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "1.25rem",
+      }}
+    >
       {/* Fejléc */}
-      <div className="flex items-start justify-between gap-4">
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: "1rem",
+        }}
+      >
         <div>
           <Link
             href={`/groups/${groupId}`}
-            className="text-sm text-gray-500 hover:text-gray-700 mb-1 block"
+            style={{
+              fontSize: "0.82rem",
+              color: "var(--text-secondary)",
+              textDecoration: "none",
+              display: "block",
+              marginBottom: "0.35rem",
+            }}
           >
             ← {group.name}
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">⚽ Meccs</h1>
+          <h1
+            style={{
+              fontSize: "1.75rem",
+              fontWeight: 800,
+              color: "var(--text-primary)",
+              letterSpacing: "-0.03em",
+            }}
+          >
+            ⚽ Meccs
+          </h1>
         </div>
         {isAdmin && (
           <Link
             href={`/groups/${groupId}/matches/${matchId}/edit`}
-            className="shrink-0 bg-gray-100 text-gray-700 rounded-xl px-4 py-2 text-sm font-medium hover:bg-gray-200 transition-colors"
+            className="btn-secondary"
+            style={{
+              flexShrink: 0,
+              fontSize: "0.82rem",
+              padding: "0.5rem 1rem",
+              textDecoration: "none",
+            }}
           >
             ✏️ Szerkesztés
           </Link>
         )}
       </div>
 
-      {/* Meccs adatok */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm divide-y divide-gray-50">
-        <div className="px-5 py-4">
-          <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">
-            Helyszín
-          </p>
-          <p className="text-gray-900 font-medium">{match.venue}</p>
-        </div>
-
-        <div className="px-5 py-4">
-          <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">
-            Időpont
-          </p>
-          <p className="text-gray-900 font-medium">{matchDateFormatted}</p>
-        </div>
-
-        <div className="px-5 py-4">
-          <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">
-            Terembér
-          </p>
-          <p className="text-gray-900 font-medium">{venueFeeFormatted}</p>
-        </div>
-
-        <div className="px-5 py-4">
-          <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">
+      {/* Meccs adatok kártya */}
+      <div
+        style={{
+          background: "var(--bg-card)",
+          border: "1px solid var(--border)",
+          borderRadius: "1.25rem",
+          overflow: "hidden",
+        }}
+      >
+        {[
+          { label: "Helyszín", value: match.venue },
+          { label: "Időpont", value: matchDateFormatted },
+          {
+            label: "Terembér",
+            value: venueFeeFormatted,
+            accent: match.venue_fee > 0,
+          },
+        ].map((row, i) => (
+          <div
+            key={row.label}
+            style={{
+              padding: "1rem 1.25rem",
+              borderTop: i > 0 ? "1px solid var(--border)" : "none",
+            }}
+          >
+            <p
+              style={{
+                fontSize: "0.7rem",
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                color: "var(--text-muted)",
+                marginBottom: "0.3rem",
+              }}
+            >
+              {row.label}
+            </p>
+            <p
+              style={{
+                fontWeight: 600,
+                color: row.accent ? "var(--accent)" : "var(--text-primary)",
+              }}
+            >
+              {row.value}
+            </p>
+          </div>
+        ))}
+        <div
+          style={{
+            padding: "1rem 1.25rem",
+            borderTop: "1px solid var(--border)",
+          }}
+        >
+          <p
+            style={{
+              fontSize: "0.7rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              color: "var(--text-muted)",
+              marginBottom: "0.3rem",
+            }}
+          >
             RSVP határidő
           </p>
           {rsvpDeadlineFormatted ? (
-            <div className="flex items-center gap-2">
-              <p className="text-gray-900 font-medium">
+            <div
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+            >
+              <p style={{ fontWeight: 600, color: "var(--text-primary)" }}>
                 {rsvpDeadlineFormatted}
               </p>
-              {rsvpExpired && (
-                <span className="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full">
-                  Lejárt
-                </span>
-              )}
+              {rsvpExpired && <span className="badge-notgoing">Lejárt</span>}
             </div>
           ) : (
-            <p className="text-gray-400 italic">Nincs beállítva</p>
+            <p style={{ color: "var(--text-muted)", fontStyle: "italic" }}>
+              Nincs beállítva
+            </p>
           )}
         </div>
       </div>
 
-      {/* Meccs link megosztása — minden tag számára */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-        <h2 className="text-sm font-semibold text-gray-700 mb-3">
+      {/* Meccs link megosztása */}
+      <div
+        style={{
+          background: "var(--bg-card)",
+          border: "1px solid var(--border)",
+          borderRadius: "1.25rem",
+          padding: "1.25rem",
+        }}
+      >
+        <h2
+          style={{
+            fontSize: "0.9rem",
+            fontWeight: 700,
+            color: "var(--text-primary)",
+            marginBottom: "0.75rem",
+          }}
+        >
           📤 Meccs link megosztása
         </h2>
         <MatchShareButton matchUrl={matchPublicUrl} />
       </div>
 
-      {/* RSVP szekció — Epic 5-ben kerül feltöltésre */}
-      <div className="bg-gray-50 rounded-2xl border border-dashed border-gray-200 px-5 py-6 text-center">
-        <p className="text-gray-400 text-sm">
-          Visszajelzés hamarosan elérhető lesz (Epic 5)
-        </p>
+      {/* RSVP szekció */}
+      <div
+        style={{
+          background: "var(--bg-card)",
+          border: "1px solid var(--border)",
+          borderRadius: "1.25rem",
+          padding: "1.25rem",
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+        }}
+      >
+        <h2
+          style={{
+            fontSize: "0.9rem",
+            fontWeight: 700,
+            color: "var(--text-primary)",
+          }}
+        >
+          Visszajelzések
+        </h2>
+
+        {isMember && (
+          <RsvpButtons
+            matchId={matchId}
+            initialStatus={myRsvpStatus}
+            isDeadlinePassed={!!rsvpExpired}
+          />
+        )}
+
+        <RsvpList
+          matchId={matchId}
+          venueFee={match.venue_fee}
+          initialRsvps={rsvps}
+          currentUserId={user?.id ?? null}
+          isDeadlinePassed={!!rsvpExpired}
+        />
       </div>
     </div>
   );

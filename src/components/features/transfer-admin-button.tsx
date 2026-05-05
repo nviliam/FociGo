@@ -52,11 +52,32 @@ export function TransferAdminButton({
       <button
         onClick={handleClick}
         disabled={isPending}
-        className="text-xs text-amber-600 border border-amber-200 bg-amber-50 hover:bg-amber-100 px-2 py-1 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        style={{
+          fontSize: "0.72rem",
+          fontWeight: 600,
+          color: "#f59e0b",
+          border: "1px solid rgba(245,158,11,0.3)",
+          background: "rgba(245,158,11,0.08)",
+          padding: "0.25rem 0.6rem",
+          borderRadius: "0.5rem",
+          cursor: isPending ? "not-allowed" : "pointer",
+          opacity: isPending ? 0.5 : 1,
+          transition: "all 0.15s",
+        }}
       >
         {isPending ? "Átruházás..." : "Admin átruházás"}
       </button>
-      {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
+      {error && (
+        <p
+          style={{
+            fontSize: "0.72rem",
+            color: "var(--notgoing-text)",
+            marginTop: "0.3rem",
+          }}
+        >
+          {error}
+        </p>
+      )}
     </div>
   );
 }

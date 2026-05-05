@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getGroupById } from "@/actions/group-actions";
 import { getMatchesByGroup } from "@/actions/match-actions";
+import { getRsvpCountsByGroup } from "@/actions/rsvp-actions";
 import { createClient } from "@/lib/supabase/server";
 import { InviteLinkButton } from "@/components/features/invite-link-button";
 import { TransferAdminButton } from "@/components/features/transfer-admin-button";
@@ -26,9 +27,10 @@ export default async function GroupDetailPage({ params }: Props) {
   const { id } = await params;
   const supabase = await createClient();
 
-  const [group, matches] = await Promise.all([
+  const [group, matches, rsvpCounts] = await Promise.all([
     getGroupById(id),
     getMatchesByGroup(id),
+    getRsvpCountsByGroup(id),
   ]);
   if (!group) notFound();
 
@@ -61,38 +63,94 @@ export default async function GroupDetailPage({ params }: Props) {
   const venueFeeDisplay = venueFee != null ? `${venueFee} Ft` : "—";
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
-      {/* Vissza gomb */}
+    <div style={{ maxWidth: "44rem", margin: "0 auto", padding: "2rem 1rem" }}>
       <Link
         href="/groups"
-        className="text-sm text-gray-500 hover:text-gray-700 mb-6 inline-flex items-center gap-1"
+        style={{
+          fontSize: "0.82rem",
+          color: "var(--text-secondary)",
+          textDecoration: "none",
+          display: "inline-block",
+          marginBottom: "1.5rem",
+        }}
       >
         ← Csoportok
       </Link>
 
       {/* Csoport fejléc */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-        <div className="flex items-start justify-between gap-4">
+      <div
+        style={{
+          background: "var(--bg-card)",
+          border: "1px solid var(--border)",
+          borderRadius: "1.25rem",
+          padding: "1.5rem",
+          marginBottom: "1.25rem",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            gap: "1rem",
+          }}
+        >
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1
+              style={{
+                fontSize: "1.75rem",
+                fontWeight: 800,
+                color: "var(--text-primary)",
+                letterSpacing: "-0.03em",
+                marginBottom: "0.5rem",
+              }}
+            >
               {group.name as string}
             </h1>
             {(group as { default_venue?: string }).default_venue && (
-              <p className="text-gray-500 text-sm mt-1">
+              <p
+                style={{
+                  fontSize: "0.85rem",
+                  color: "var(--text-secondary)",
+                  marginBottom: "0.2rem",
+                }}
+              >
                 📍 {(group as { default_venue?: string }).default_venue}
               </p>
             )}
             {(group as { default_schedule?: string }).default_schedule && (
-              <p className="text-gray-500 text-sm mt-1">
+              <p
+                style={{
+                  fontSize: "0.85rem",
+                  color: "var(--text-secondary)",
+                  marginBottom: "0.2rem",
+                }}
+              >
                 🕐 {(group as { default_schedule?: string }).default_schedule}
               </p>
             )}
-            <p className="text-gray-500 text-sm mt-1">
-              💰 Terembér: {venueFeeDisplay}
+            <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>
+              💰 Terembér:{" "}
+              <span style={{ color: "var(--accent)", fontWeight: 600 }}>
+                {venueFeeDisplay}
+              </span>
             </p>
           </div>
           {isAdmin && (
-            <span className="shrink-0 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">
+            <span
+              style={{
+                flexShrink: 0,
+                fontSize: "0.68rem",
+                fontWeight: 700,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                background: "var(--accent-glow)",
+                color: "var(--accent)",
+                border: "1px solid var(--accent-border)",
+                padding: "0.2rem 0.6rem",
+                borderRadius: "9999px",
+              }}
+            >
               Admin
             </span>
           )}
@@ -101,44 +159,93 @@ export default async function GroupDetailPage({ params }: Props) {
 
       {/* Meghívó link — csak adminnak */}
       {isAdmin && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-          <h2 className="text-base font-semibold text-gray-800 mb-3">
-            Meghívó link
+        <div
+          style={{
+            background: "var(--bg-card)",
+            border: "1px solid var(--border)",
+            borderRadius: "1.25rem",
+            padding: "1.5rem",
+            marginBottom: "1.25rem",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "0.95rem",
+              fontWeight: 700,
+              color: "var(--text-primary)",
+              marginBottom: "0.75rem",
+            }}
+          >
+            🔗 Meghívó link
           </h2>
           <InviteLinkButton inviteUrl={inviteUrl} />
         </div>
       )}
 
       {/* Meccsek listája */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-semibold text-gray-800">
-            Közelgő meccsek ({matches.length})
+      <div
+        style={{
+          background: "var(--bg-card)",
+          border: "1px solid var(--border)",
+          borderRadius: "1.25rem",
+          padding: "1.5rem",
+          marginBottom: "1.25rem",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: "1.25rem",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "0.95rem",
+              fontWeight: 700,
+              color: "var(--text-primary)",
+            }}
+          >
+            ⚽ Meccsek ({matches.length})
           </h2>
           {isAdmin && (
             <Link
               href={`/groups/${id}/matches/new`}
-              className="text-sm bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors font-medium"
+              className="btn-primary"
+              style={{
+                fontSize: "0.8rem",
+                padding: "0.45rem 1rem",
+                textDecoration: "none",
+              }}
             >
               + Új meccs
             </Link>
           )}
         </div>
+
         {matches.length === 0 ? (
-          <p className="text-gray-400 text-sm">
+          <p
+            style={{
+              color: "var(--text-muted)",
+              fontSize: "0.85rem",
+              textAlign: "center",
+              padding: "2rem 0",
+            }}
+          >
             Még nincs meccs.{" "}
             {isAdmin && (
               <Link
                 href={`/groups/${id}/matches/new`}
-                className="text-green-600 underline"
+                style={{ color: "var(--accent)", textDecoration: "underline" }}
               >
                 Hozz létre egyet!
               </Link>
             )}
           </p>
         ) : (
-          <ul className="divide-y divide-gray-100">
-            {(matches as Match[]).map((match) => {
+          <ul style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+            {(matches as Match[]).map((match, i) => {
               const date = new Date(match.match_date);
               const dateStr = date.toLocaleDateString("hu-HU", {
                 year: "numeric",
@@ -151,29 +258,98 @@ export default async function GroupDetailPage({ params }: Props) {
                 minute: "2-digit",
               });
               const isPast = date < new Date();
+              const counts = rsvpCounts.get(match.id) ?? {
+                going: 0,
+                notGoing: 0,
+              };
+              const pricePerPerson =
+                counts.going > 0 && match.venue_fee > 0
+                  ? Math.ceil(match.venue_fee / counts.going)
+                  : null;
               return (
-                <li key={match.id} className="py-3">
+                <li
+                  key={match.id}
+                  style={{
+                    borderTop: i > 0 ? "1px solid var(--border)" : "none",
+                  }}
+                >
                   <Link
                     href={`/groups/${id}/matches/${match.id}`}
-                    className="flex items-start justify-between gap-2 hover:bg-gray-50 rounded-lg -mx-2 px-2 py-1 transition-colors"
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      justifyContent: "space-between",
+                      gap: "0.75rem",
+                      padding: "0.9rem 0.5rem",
+                      textDecoration: "none",
+                      borderRadius: "0.75rem",
+                      transition: "background 0.15s",
+                    }}
                   >
                     <div>
                       <p
-                        className={`font-medium text-sm ${isPast ? "text-gray-400" : "text-gray-800"}`}
+                        style={{
+                          fontWeight: 600,
+                          fontSize: "0.9rem",
+                          color: isPast
+                            ? "var(--text-muted)"
+                            : "var(--text-primary)",
+                          marginBottom: "0.2rem",
+                        }}
                       >
                         {dateStr} {timeStr}
                       </p>
-                      <p className="text-gray-500 text-xs mt-0.5">
+                      <p
+                        style={{
+                          fontSize: "0.8rem",
+                          color: "var(--text-secondary)",
+                          marginBottom: "0.3rem",
+                        }}
+                      >
                         📍 {match.venue}
                       </p>
-                      {match.venue_fee > 0 && (
-                        <p className="text-gray-500 text-xs">
-                          💰 {match.venue_fee} Ft
-                        </p>
-                      )}
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.75rem",
+                        }}
+                      >
+                        {counts.going > 0 && (
+                          <span className="badge-going">
+                            ✓ {counts.going} jön
+                          </span>
+                        )}
+                        {counts.notGoing > 0 && (
+                          <span className="badge-notgoing">
+                            ✗ {counts.notGoing} nem jön
+                          </span>
+                        )}
+                        {pricePerPerson != null && (
+                          <span
+                            style={{
+                              fontSize: "0.8rem",
+                              fontWeight: 700,
+                              color: "var(--accent)",
+                            }}
+                          >
+                            {pricePerPerson.toLocaleString("hu-HU")} Ft/fő
+                          </span>
+                        )}
+                      </div>
                     </div>
                     {isPast && (
-                      <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full shrink-0">
+                      <span
+                        style={{
+                          flexShrink: 0,
+                          fontSize: "0.7rem",
+                          color: "var(--text-muted)",
+                          background: "rgba(255,255,255,0.05)",
+                          border: "1px solid var(--border)",
+                          padding: "0.15rem 0.5rem",
+                          borderRadius: "9999px",
+                        }}
+                      >
                         Lejárt
                       </span>
                     )}
@@ -186,32 +362,85 @@ export default async function GroupDetailPage({ params }: Props) {
       </div>
 
       {/* Tagok listája */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-base font-semibold text-gray-800 mb-4">
-          Tagok ({members.length})
+      <div
+        style={{
+          background: "var(--bg-card)",
+          border: "1px solid var(--border)",
+          borderRadius: "1.25rem",
+          padding: "1.5rem",
+        }}
+      >
+        <h2
+          style={{
+            fontSize: "0.95rem",
+            fontWeight: 700,
+            color: "var(--text-primary)",
+            marginBottom: "1rem",
+          }}
+        >
+          👥 Tagok ({members.length})
         </h2>
         {members.length === 0 ? (
-          <p className="text-gray-400 text-sm">Nincsenek tagok.</p>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>
+            Nincsenek tagok.
+          </p>
         ) : (
-          <ul className="divide-y divide-gray-100">
-            {members.map((member) => (
+          <ul style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+            {members.map((member, i) => (
               <li
                 key={member.user_id}
-                className="flex items-center justify-between py-3"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "0.75rem 0",
+                  borderTop: i > 0 ? "1px solid var(--border)" : "none",
+                }}
               >
-                <span className="text-gray-700 font-medium">
+                <span
+                  style={{
+                    fontSize: "0.9rem",
+                    fontWeight: 500,
+                    color: "var(--text-primary)",
+                  }}
+                >
                   {member.users?.nickname ?? "Ismeretlen"}
                   {member.user_id === user?.id && (
-                    <span className="text-xs text-gray-400 ml-1">(én)</span>
+                    <span
+                      style={{
+                        fontSize: "0.75rem",
+                        color: "var(--text-muted)",
+                        marginLeft: "0.35rem",
+                      }}
+                    >
+                      (én)
+                    </span>
                   )}
                 </span>
-                <div className="flex items-center gap-2">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
                   {member.is_admin && (
-                    <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
+                    <span
+                      style={{
+                        fontSize: "0.68rem",
+                        fontWeight: 700,
+                        letterSpacing: "0.06em",
+                        textTransform: "uppercase",
+                        background: "var(--accent-glow)",
+                        color: "var(--accent)",
+                        border: "1px solid var(--accent-border)",
+                        padding: "0.15rem 0.5rem",
+                        borderRadius: "9999px",
+                      }}
+                    >
                       Admin
                     </span>
                   )}
-                  {/* Admin átruházás gomb — csak az adminnak, saját maga kivételével */}
                   {isAdmin && !member.is_admin && (
                     <TransferAdminButton
                       groupId={id}
