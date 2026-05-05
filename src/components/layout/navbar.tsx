@@ -53,11 +53,11 @@ export async function Navbar() {
         >
           <span style={{ fontSize: "1.25rem" }}>⚽</span>
           <span
+            className="logo-text"
             style={{
-              fontWeight: 800,
+              fontWeight: 400,
               fontSize: "1.1rem",
               color: "var(--accent)",
-              letterSpacing: "-0.02em",
             }}
           >
             FociGo

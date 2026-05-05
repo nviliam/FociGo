@@ -39,11 +39,11 @@ export default async function LoginPage({ searchParams }: Props) {
         <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
           <div style={{ fontSize: "3rem", marginBottom: "0.5rem" }}>⚽</div>
           <h1
+            className="logo-text"
             style={{
               fontSize: "2.5rem",
-              fontWeight: 800,
+              fontWeight: 400,
               color: "var(--accent)",
-              letterSpacing: "-0.04em",
               lineHeight: 1,
               marginBottom: "0.5rem",
             }}

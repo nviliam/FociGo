@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Michroma&display=swap");
 @import "tailwindcss";
 
 /* ============================================================
@@ -47,10 +48,16 @@
   box-sizing: border-box;
 }
 
+/* Michroma — minden szöveg erre épül */
+.logo-text {
+  font-family: "Michroma", sans-serif;
+  letter-spacing: 0.05em;
+}
+
 body {
   background: var(--bg-base);
   color: var(--text-primary);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: "Michroma", system-ui, sans-serif;
   /* Futball pálya — halvány vonalak a háttérben */
   background-image:
     linear-gradient(rgba(0, 230, 118, 0.015) 1px, transparent 1px),

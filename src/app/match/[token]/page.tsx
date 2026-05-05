@@ -90,10 +90,10 @@ export default async function PublicMatchPage({ params }: Props) {
           <h1
             style={{
               fontSize: "1.5rem",
-              fontWeight: 800,
+              fontWeight: 400,
               color: "var(--accent)",
-              letterSpacing: "-0.03em",
             }}
+            className="logo-text"
           >
             FociGo
           </h1>
