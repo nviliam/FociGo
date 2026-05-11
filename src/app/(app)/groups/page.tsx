@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getUserGroups } from "@/actions/group-actions";
+import { DeleteGroupButton } from "@/components/features/delete-group-button";
 
 export default async function GroupsPage() {
   const memberships = await getUserGroups();
@@ -89,8 +90,19 @@ export default async function GroupsPage() {
             if (!group) return null;
 
             return (
-              <li key={group.id}>
-                <Link href={`/groups/${group.id}`} className="card-link">
+              <li
+                key={group.id}
+                style={{
+                  display: "flex",
+                  alignItems: "stretch",
+                  gap: "0.5rem",
+                }}
+              >
+                <Link
+                  href={`/groups/${group.id}`}
+                  className="card-link"
+                  style={{ flex: 1 }}
+                >
                   <div
                     style={{
                       display: "flex",
@@ -161,6 +173,14 @@ export default async function GroupsPage() {
                     </div>
                   </div>
                 </Link>
+                {m.is_admin && (
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <DeleteGroupButton
+                      groupId={group.id}
+                      groupName={group.name}
+                    />
+                  </div>
+                )}
               </li>
             );
           })}

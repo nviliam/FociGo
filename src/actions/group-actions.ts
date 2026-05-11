@@ -207,3 +207,46 @@ export async function transferAdmin(groupId: string, newAdminUserId: string) {
   revalidatePath(`/groups/${groupId}`);
   return { success: true };
 }
+
+/**
+ * Csoport törlése
+ *
+ * Csak admin törölheti a saját csoportját.
+ * A CASCADE FK constraint automatikusan törli a group_members,
+ * matches és rsvp rekordokat is.
+ */
+export async function deleteGroup(groupId: string) {
+  const supabase = await createClient();
+
+  // 1. Auth ellenőrzés
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Nincs bejelentkezve." };
+
+  // 2. Admin jogkör ellenőrzés
+  const { data: membership, error: memberError } = await supabase
+    .from("group_members")
+    .select("is_admin")
+    .eq("group_id", groupId)
+    .eq("user_id", user.id)
+    .single();
+
+  if (memberError || !membership?.is_admin) {
+    return { error: "Csak admin törölheti a csoportot." };
+  }
+
+  // 3. Törlés
+  const { error: deleteError } = await supabase
+    .from("groups")
+    .delete()
+    .eq("id", groupId);
+
+  if (deleteError) {
+    console.error("deleteGroup error:", deleteError.message);
+    return { error: "A törlés sikertelen. Próbáld újra!" };
+  }
+
+  revalidatePath("/groups");
+  redirect("/groups");
+}

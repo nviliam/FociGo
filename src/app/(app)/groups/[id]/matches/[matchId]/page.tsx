@@ -7,6 +7,7 @@ import { getRsvpsByMatch } from "@/actions/rsvp-actions";
 import { MatchShareButton } from "@/components/features/match-share-button";
 import { RsvpButtons } from "@/components/features/rsvp-buttons";
 import { RsvpList } from "@/components/features/rsvp-list";
+import { DeleteMatchButton } from "@/components/features/delete-match-button";
 import type { RsvpStatus } from "@/types";
 
 type Props = {
@@ -151,18 +152,20 @@ export default async function MatchDetailPage({ params }: Props) {
           </h1>
         </div>
         {isAdmin && (
-          <Link
-            href={`/groups/${groupId}/matches/${matchId}/edit`}
-            className="btn-secondary"
-            style={{
-              flexShrink: 0,
-              fontSize: "0.82rem",
-              padding: "0.5rem 1rem",
-              textDecoration: "none",
-            }}
-          >
-            ✏️ Szerkesztés
-          </Link>
+          <div style={{ display: "flex", gap: "0.5rem", flexShrink: 0 }}>
+            <Link
+              href={`/groups/${groupId}/matches/${matchId}/edit`}
+              className="btn-secondary"
+              style={{
+                fontSize: "0.82rem",
+                padding: "0.5rem 1rem",
+                textDecoration: "none",
+              }}
+            >
+              ✏️ Szerkesztés
+            </Link>
+            <DeleteMatchButton groupId={groupId} matchId={matchId} />
+          </div>
         )}
       </div>
 

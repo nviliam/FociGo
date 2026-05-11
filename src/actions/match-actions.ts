@@ -226,3 +226,45 @@ export async function getMatchByPublicToken(token: string) {
 
   return data;
 }
+
+/**
+ * Meccs törlése
+ *
+ * Csak admin törölheti. A CASCADE FK constraint törli a kapcsolódó
+ * rsvp rekordokat is.
+ */
+export async function deleteMatch(groupId: string, matchId: string) {
+  const supabase = await createClient();
+
+  // 1. Auth ellenőrzés
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Nincs bejelentkezve." };
+
+  // 2. Admin jogkör ellenőrzés
+  const { data: membership, error: memberError } = await supabase
+    .from("group_members")
+    .select("is_admin")
+    .eq("group_id", groupId)
+    .eq("user_id", user.id)
+    .single();
+
+  if (memberError || !membership?.is_admin) {
+    return { error: "Csak admin törölhet meccset." };
+  }
+
+  // 3. Törlés
+  const { error: deleteError } = await supabase
+    .from("matches")
+    .delete()
+    .eq("id", matchId);
+
+  if (deleteError) {
+    console.error("deleteMatch error:", deleteError.message);
+    return { error: "A törlés sikertelen. Próbáld újra!" };
+  }
+
+  revalidatePath(`/groups/${groupId}`);
+  redirect(`/groups/${groupId}`);
+}
