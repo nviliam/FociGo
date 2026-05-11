@@ -178,8 +178,37 @@ export default async function MatchDetailPage({ params }: Props) {
           overflow: "hidden",
         }}
       >
+        {/* Helyszín — Google Maps link */}
+        <div style={{ padding: "1rem 1.25rem" }}>
+          <p
+            style={{
+              fontSize: "0.7rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              color: "var(--text-muted)",
+              marginBottom: "0.3rem",
+            }}
+          >
+            Helyszín
+          </p>
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(match.venue)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontWeight: 600,
+              color: "var(--accent)",
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.35rem",
+            }}
+          >
+            📍 {match.venue}
+          </a>
+        </div>
+
         {[
-          { label: "Helyszín", value: match.venue },
           { label: "Időpont", value: matchDateFormatted },
           {
             label: "Terembér",
@@ -191,7 +220,7 @@ export default async function MatchDetailPage({ params }: Props) {
             key={row.label}
             style={{
               padding: "1rem 1.25rem",
-              borderTop: i > 0 ? "1px solid var(--border)" : "none",
+              borderTop: "1px solid var(--border)",
             }}
           >
             <p
