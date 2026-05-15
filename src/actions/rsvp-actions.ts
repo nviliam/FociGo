@@ -240,3 +240,76 @@ export async function getRsvpsByMatchPublic(matchId: string) {
     users: { nickname: string } | null;
   }>;
 }
+
+/**
+ * Vendég RSVP upsert — bejelentkezés nélkül, névvel
+ *
+ * Miért különálló táblában (guest_rsvps)?
+ * Az rsvps tábla user_id NOT NULL + FK az auth.users-re, tehát
+ * anonymous visszajelzést nem fogad. A guest_rsvps tábla nincs
+ * kötve auth.users-hoz — elég a név és a meccs ID.
+ */
+export async function guestRsvp(
+  matchId: string,
+  guestName: string,
+  status: RsvpStatus,
+) {
+  const supabase = await createClient();
+
+  const name = guestName.trim();
+  if (name.length < 2 || name.length > 40) {
+    return { error: "A nevednek 2–40 karakter között kell lennie." };
+  }
+
+  const { data: match } = await supabase
+    .from("matches")
+    .select("public_token, rsvp_deadline")
+    .eq("id", matchId)
+    .single();
+
+  if (!match) return { error: "A meccs nem található." };
+
+  if (match.rsvp_deadline && new Date(match.rsvp_deadline) < new Date()) {
+    return { error: "Az RSVP határidő lejárt." };
+  }
+
+  const { error: upsertError } = await supabase
+    .from("guest_rsvps")
+    .upsert(
+      { match_id: matchId, guest_name: name, status },
+      { onConflict: "match_id,guest_name" },
+    );
+
+  if (upsertError) {
+    console.error("guestRsvp error:", upsertError.message);
+    return { error: "A visszajelzés mentése sikertelen. Próbáld újra!" };
+  }
+
+  revalidatePath(`/match/${match.public_token}`);
+  return { success: true };
+}
+
+/**
+ * Vendég RSVP-k lekérése — auth nélkül, nyilvános meccshez
+ */
+export async function getGuestRsvpsByMatchPublic(matchId: string) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("guest_rsvps")
+    .select("id, match_id, guest_name, status")
+    .eq("match_id", matchId)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("getGuestRsvpsByMatchPublic error:", error.message);
+    return [];
+  }
+
+  return (data ?? []) as Array<{
+    id: string;
+    match_id: string;
+    guest_name: string;
+    status: RsvpStatus;
+  }>;
+}

@@ -1,6 +1,10 @@
 import { notFound } from "next/navigation";
 import { getMatchByPublicToken } from "@/actions/match-actions";
-import { getRsvpsByMatchPublic } from "@/actions/rsvp-actions";
+import {
+  getRsvpsByMatchPublic,
+  getGuestRsvpsByMatchPublic,
+} from "@/actions/rsvp-actions";
+import { GuestRsvpForm } from "@/components/features/guest-rsvp-form";
 
 type Props = {
   params: Promise<{ token: string }>;
@@ -39,7 +43,25 @@ export default async function PublicMatchPage({ params }: Props) {
   if (!match) notFound();
 
   // RSVP lista lekérése — auth nélkül, anon Supabase kulccsal
-  const matchRsvps = await getRsvpsByMatchPublic(match.id);
+  const [matchRsvps, guestRsvps] = await Promise.all([
+    getRsvpsByMatchPublic(match.id),
+    getGuestRsvpsByMatchPublic(match.id),
+  ]);
+
+  // Összesített lista a megjelenítéshez
+  type DisplayRsvp = { id: string; name: string; status: string };
+  const allRsvps: DisplayRsvp[] = [
+    ...matchRsvps.map((r) => ({
+      id: r.id,
+      name: r.users?.nickname ?? "Ismeretlen",
+      status: r.status,
+    })),
+    ...guestRsvps.map((r) => ({
+      id: r.id,
+      name: r.guest_name,
+      status: r.status,
+    })),
+  ];
 
   // Dátum formázás — hu-HU locale, olvasható formátum
   const matchDateFormatted = new Date(match.match_date).toLocaleString(
@@ -210,7 +232,7 @@ export default async function PublicMatchPage({ params }: Props) {
             Visszajelzések
           </h2>
 
-          {matchRsvps.length > 0 && (
+          {allRsvps.length > 0 && (
             <div
               style={{
                 display: "flex",
@@ -224,22 +246,21 @@ export default async function PublicMatchPage({ params }: Props) {
             >
               <span style={{ fontSize: "0.85rem" }}>
                 <span style={{ color: "var(--going-text)", fontWeight: 700 }}>
-                  {matchRsvps.filter((r) => r.status === "going").length} jön
+                  {allRsvps.filter((r) => r.status === "going").length} jön
                 </span>
-                {matchRsvps.filter((r) => r.status === "not_going").length >
+                {allRsvps.filter((r) => r.status === "not_going").length >
                   0 && (
                   <span style={{ color: "var(--text-muted)" }}>
                     {" "}
-                    ·{" "}
-                    {
-                      matchRsvps.filter((r) => r.status === "not_going").length
+                    · {
+                      allRsvps.filter((r) => r.status === "not_going").length
                     }{" "}
                     nem jön
                   </span>
                 )}
               </span>
               {match.venue_fee > 0 &&
-                matchRsvps.filter((r) => r.status === "going").length > 0 && (
+                allRsvps.filter((r) => r.status === "going").length > 0 && (
                   <div
                     style={{
                       display: "flex",
@@ -256,7 +277,7 @@ export default async function PublicMatchPage({ params }: Props) {
                     >
                       {Math.ceil(
                         match.venue_fee /
-                          matchRsvps.filter((r) => r.status === "going").length,
+                          allRsvps.filter((r) => r.status === "going").length,
                       ).toLocaleString("hu-HU")}{" "}
                       Ft / fő
                     </span>
@@ -268,7 +289,7 @@ export default async function PublicMatchPage({ params }: Props) {
             </div>
           )}
 
-          {matchRsvps.length === 0 ? (
+          {allRsvps.length === 0 ? (
             <p
               style={{
                 color: "var(--text-muted)",
@@ -281,7 +302,7 @@ export default async function PublicMatchPage({ params }: Props) {
             </p>
           ) : (
             <ul style={{ display: "flex", flexDirection: "column" }}>
-              {matchRsvps.map((rsvp, i) => (
+              {allRsvps.map((rsvp, i) => (
                 <li
                   key={rsvp.id}
                   style={{
@@ -295,7 +316,7 @@ export default async function PublicMatchPage({ params }: Props) {
                   <span
                     style={{ fontSize: "0.9rem", color: "var(--text-primary)" }}
                   >
-                    {rsvp.users?.nickname ?? "Ismeretlen"}
+                    {rsvp.name}
                   </span>
                   {rsvp.status === "going" ? (
                     <span className="badge-going">✓ Jövök</span>
@@ -308,39 +329,56 @@ export default async function PublicMatchPage({ params }: Props) {
           )}
         </div>
 
-        {/* Login CTA */}
+        {/* Vendég visszajelzés */}
         <div
           style={{
             background: "var(--bg-card)",
             border: "1px solid var(--accent-border)",
             borderRadius: "1.25rem",
             padding: "1.5rem",
-            textAlign: "center",
             boxShadow: "0 0 24px var(--accent-glow)",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "0.95rem",
+              fontWeight: 700,
+              color: "var(--text-primary)",
+              marginBottom: "1rem",
+            }}
+          >
+            📋 Visszajelzés
+          </h2>
+          <GuestRsvpForm matchId={match.id} isDeadlinePassed={!!rsvpExpired} />
+        </div>
+
+        {/* Login CTA — aki csatlakozni szeretne a csoporthoz */}
+        <div
+          style={{
+            background: "var(--bg-card)",
+            border: "1px solid var(--border)",
+            borderRadius: "1.25rem",
+            padding: "1.25rem 1.5rem",
+            textAlign: "center",
           }}
         >
           <p
             style={{
-              color: "var(--text-primary)",
-              fontWeight: 700,
-              marginBottom: "0.4rem",
-            }}
-          >
-            Részese vagy te is a meccsnek?
-          </p>
-          <p
-            style={{
               color: "var(--text-secondary)",
               fontSize: "0.85rem",
-              marginBottom: "1rem",
+              marginBottom: "0.75rem",
             }}
           >
-            Jelentkezz be, hogy visszajelzést adhass.
+            Szeretnél csatlakozni a csoporthoz? Kérj meghívó linket az admintól.
           </p>
           <a
             href="/login"
-            className="btn-primary"
-            style={{ display: "inline-block", textDecoration: "none" }}
+            className="btn-secondary"
+            style={{
+              display: "inline-block",
+              textDecoration: "none",
+              fontSize: "0.85rem",
+            }}
           >
             Bejelentkezés
           </a>
