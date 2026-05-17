@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { updateNickname } from "@/actions/auth-actions";
@@ -41,7 +42,15 @@ export default async function SetupPage({ searchParams }: Props) {
     >
       <div style={{ width: "100%", maxWidth: "24rem" }}>
         <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-          <div style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>⚽</div>
+          <div
+            style={{
+              marginBottom: "0.5rem",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Image src="/logo1.png" alt="FociGo logo" width={75} height={75} />
+          </div>
           <h1
             style={{
               fontSize: "1.5rem",

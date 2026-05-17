@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/actions/auth-actions";
 
@@ -51,7 +52,7 @@ export async function Navbar() {
             textDecoration: "none",
           }}
         >
-          <span style={{ fontSize: "1.25rem" }}>⚽</span>
+          <Image src="/logo1.png" alt="FociGo logo" width={32} height={32} />
           <span
             className="logo-text"
             style={{

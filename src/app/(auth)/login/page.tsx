@@ -1,4 +1,5 @@
-﻿import { signInWithGoogle, signInWithMagicLink } from "@/actions/auth-actions";
+﻿import Image from "next/image";
+import { signInWithGoogle, signInWithMagicLink } from "@/actions/auth-actions";
 
 type Props = {
   searchParams: Promise<{ error?: string; next?: string }>;
@@ -37,7 +38,15 @@ export default async function LoginPage({ searchParams }: Props) {
       <div style={{ width: "100%", maxWidth: "26rem", position: "relative" }}>
         {/* Brand */}
         <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
-          <div style={{ fontSize: "3rem", marginBottom: "0.5rem" }}>⚽</div>
+          <div
+            style={{
+              marginBottom: "0.5rem",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Image src="/logo1.png" alt="FociGo logo" width={90} height={90} />
+          </div>
           <h1
             className="logo-text"
             style={{
