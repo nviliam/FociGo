@@ -60,7 +60,7 @@ export default async function LoginPage({ searchParams }: Props) {
             FociGo
           </h1>
           <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem" }}>
-            Szervezzük meg a következő meccset!
+            Szervezd meg a következő meccset!
           </p>
         </div>
 
@@ -94,7 +94,7 @@ export default async function LoginPage({ searchParams }: Props) {
               marginBottom: "1.75rem",
             }}
           >
-            Lépj be a csoportod meccseinek szervezéséhez
+            Lépj be a csapatod meccseinek szervezéséhez
           </p>
 
           {error && (
@@ -218,7 +218,7 @@ export default async function LoginPage({ searchParams }: Props) {
             marginTop: "1.5rem",
           }}
         >
-          Belépéssel elfogadod a használati feltételeket.
+          Hajrá!
         </p>
       </div>
     </div>

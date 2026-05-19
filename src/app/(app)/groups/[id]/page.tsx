@@ -176,7 +176,7 @@ export default async function GroupDetailPage({ params }: Props) {
               marginBottom: "0.75rem",
             }}
           >
-            🔗 Meghívó link
+            🔗 Meghívó link a csoportba
           </h2>
           <InviteLinkButton inviteUrl={inviteUrl} />
         </div>

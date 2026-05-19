@@ -25,7 +25,7 @@ export default async function GroupsPage() {
               letterSpacing: "-0.03em",
             }}
           >
-            Csoportjaim
+            Csoportok
           </h1>
           <p
             style={{
@@ -73,7 +73,7 @@ export default async function GroupsPage() {
             Még nincs csoportod
           </p>
           <p style={{ fontSize: "0.85rem" }}>
-            Hozz létre egyet, vagy kérj meghívót egy admintól.
+            Hozz létre egyet, vagy kérj meghívót az admintól.
           </p>
         </div>
       ) : (
