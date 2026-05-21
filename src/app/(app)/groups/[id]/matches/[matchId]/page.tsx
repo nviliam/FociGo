@@ -3,7 +3,10 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getMatchById } from "@/actions/match-actions";
 import { getGroupById } from "@/actions/group-actions";
-import { getRsvpsByMatch } from "@/actions/rsvp-actions";
+import {
+  getRsvpsByMatch,
+  getGuestRsvpsByMatchPublic,
+} from "@/actions/rsvp-actions";
 import { MatchShareButton } from "@/components/features/match-share-button";
 import { RsvpButtons } from "@/components/features/rsvp-buttons";
 import { RsvpList } from "@/components/features/rsvp-list";
@@ -34,10 +37,11 @@ export default async function MatchDetailPage({ params }: Props) {
   const { id: groupId, matchId } = await params;
 
   // Párhuzamos lekérés — gyorsabb mint egymás után
-  const [match, group, rsvps] = await Promise.all([
+  const [match, group, rsvps, guestRsvps] = await Promise.all([
     getMatchById(matchId),
     getGroupById(groupId),
     getRsvpsByMatch(matchId),
+    getGuestRsvpsByMatchPublic(matchId),
   ]);
 
   if (!match || !group) notFound();
@@ -334,6 +338,7 @@ export default async function MatchDetailPage({ params }: Props) {
           matchId={matchId}
           venueFee={match.venue_fee}
           initialRsvps={rsvps}
+          initialGuestRsvps={guestRsvps}
           currentUserId={user?.id ?? null}
           isDeadlinePassed={!!rsvpExpired}
         />

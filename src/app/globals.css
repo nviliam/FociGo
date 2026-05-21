@@ -48,6 +48,14 @@
   box-sizing: border-box;
 }
 
+/* Tailwind preflight sets height:auto on all img elements, which overrides
+   the HTML width/height attributes that Next.js Image relies on for sizing.
+   `revert` restores browser-default behaviour (respects the HTML attributes). */
+img[data-nimg] {
+  height: revert;
+  max-width: revert;
+}
+
 /* Michroma — minden szöveg erre épül */
 .logo-text {
   font-family: "Michroma", sans-serif;

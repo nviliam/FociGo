@@ -12,10 +12,18 @@ type RsvpEntry = {
   users: { nickname: string } | null;
 };
 
+type GuestRsvpEntry = {
+  id: string;
+  match_id: string;
+  guest_name: string;
+  status: RsvpStatus;
+};
+
 type Props = {
   matchId: string;
   venueFee: number; // terembér fillérben
   initialRsvps: RsvpEntry[]; // szerver oldali initial adat
+  initialGuestRsvps: GuestRsvpEntry[]; // vendég visszajelzések
   currentUserId: string | null; // aktuális user — saját bejegyzés kiemeléshez
   isDeadlinePassed: boolean; // határidő lejárt-e
 };
@@ -56,10 +64,13 @@ export function RsvpList({
   matchId,
   venueFee,
   initialRsvps,
+  initialGuestRsvps,
   currentUserId,
   isDeadlinePassed,
 }: Props) {
   const [rsvps, setRsvps] = useState<RsvpEntry[]>(initialRsvps);
+  const [guestRsvps, setGuestRsvps] =
+    useState<GuestRsvpEntry[]>(initialGuestRsvps);
 
   useEffect(() => {
     // Supabase Browser kliens — env változók az .env.local-ból
@@ -122,6 +133,27 @@ export function RsvpList({
           }
         },
       )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "guest_rsvps",
+          filter: `match_id=eq.${matchId}`,
+        },
+        async () => {
+          // Vendég RSVP változás — friss lista lekérése
+          const { data } = await supabase
+            .from("guest_rsvps")
+            .select("id, match_id, guest_name, status")
+            .eq("match_id", matchId)
+            .order("created_at", { ascending: true });
+
+          if (data) {
+            setGuestRsvps(data as GuestRsvpEntry[]);
+          }
+        },
+      )
       .subscribe();
 
     // Cleanup: leiratkozás komponens unmount-kor
@@ -131,16 +163,21 @@ export function RsvpList({
     };
   }, [matchId]);
 
-  // Számítások
-  const goingCount = rsvps.filter((r) => r.status === "going").length;
-  const notGoingCount = rsvps.filter((r) => r.status === "not_going").length;
+  // Számítások — tagok + vendégek együtt
+  const goingCount =
+    rsvps.filter((r) => r.status === "going").length +
+    guestRsvps.filter((r) => r.status === "going").length;
+  const notGoingCount =
+    rsvps.filter((r) => r.status === "not_going").length +
+    guestRsvps.filter((r) => r.status === "not_going").length;
+  const totalCount = rsvps.length + guestRsvps.length;
   const pricePerPerson =
     goingCount > 0 && venueFee > 0 ? Math.ceil(venueFee / goingCount) : null;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
       {/* Összesítő + árkalkulátor */}
-      {(rsvps.length > 0 || venueFee > 0) && (
+      {(totalCount > 0 || venueFee > 0) && (
         <div
           style={{
             display: "flex",
@@ -187,7 +224,7 @@ export function RsvpList({
       )}
 
       {/* RSVP lista */}
-      {rsvps.length === 0 ? (
+      {totalCount === 0 ? (
         <p
           style={{
             color: "var(--text-muted)",
@@ -226,6 +263,41 @@ export function RsvpList({
                     (én)
                   </span>
                 )}
+              </span>
+              {rsvp.status === "going" ? (
+                <span className="badge-going">✓ Jövök</span>
+              ) : (
+                <span className="badge-notgoing">✗ Nem jövök</span>
+              )}
+            </li>
+          ))}
+          {guestRsvps.map((rsvp, i) => (
+            <li
+              key={rsvp.id}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "0.6rem 0",
+                borderTop:
+                  rsvps.length > 0 || i > 0
+                    ? "1px solid var(--border)"
+                    : "none",
+              }}
+            >
+              <span
+                style={{ fontSize: "0.9rem", color: "var(--text-primary)" }}
+              >
+                {rsvp.guest_name}
+                <span
+                  style={{
+                    fontSize: "0.72rem",
+                    color: "var(--text-muted)",
+                    marginLeft: "0.3rem",
+                  }}
+                >
+                  (vendég)
+                </span>
               </span>
               {rsvp.status === "going" ? (
                 <span className="badge-going">✓ Jövök</span>
