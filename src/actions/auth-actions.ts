@@ -62,30 +62,77 @@ export async function signInWithMagicLink(formData: FormData) {
     redirect("/login?error=invalid_email");
   }
 
-  // Csak relatív, /join/ vagy /groups/ útvonalat engedünk — open redirect védelem
   const safeNext =
     next.startsWith("/join/") || next.startsWith("/groups/") ? next : "";
 
-  const callbackUrl = safeNext
-    ? `${getBaseUrl()}/auth/callback?next=${encodeURIComponent(safeNext)}`
-    : `${getBaseUrl()}/auth/callback`;
-
   const supabase = await createClient();
 
+  // OTP kód küldése emailRedirectTo NÉLKÜL → 6-jegyű kód kerül az emailbe,
+  // nem magic link. Így nincs PKCE, nincs böngésző-függőség, bármilyen
+  // email-klienssel és eszközzel működik.
   const { error } = await supabase.auth.signInWithOtp({
     email: validated.data.email,
-    options: {
-      emailRedirectTo: callbackUrl,
-    },
+    options: { shouldCreateUser: true },
   });
 
   if (error) {
-    console.error("Magic-link hiba:", error.message);
-    redirect("/login?error=email_failed");
+    console.error("OTP hiba:", error.message);
+    const isRateLimit = error.message.toLowerCase().includes("rate limit");
+    redirect(`/login?error=${isRateLimit ? "rate_limit" : "email_failed"}`);
   }
 
-  // Sikeres küldés → visszaigazoló oldal
-  redirect("/login/check-email");
+  // Email + next átadása a kódbeíró oldalnak
+  const params = new URLSearchParams({ email: validated.data.email });
+  if (safeNext) params.set("next", safeNext);
+  redirect(`/login/check-email?${params.toString()}`);
+}
+
+/**
+ * 6-jegyű OTP kód ellenőrzése — bejelentkezés befejezése
+ */
+export async function verifyOtpCode(formData: FormData) {
+  const email = formData.get("email")?.toString() ?? "";
+  const token = formData.get("token")?.toString() ?? "";
+  const next = formData.get("next")?.toString() ?? "";
+
+  if (!email || !token) redirect("/login?error=invalid_email");
+
+  const safeNext =
+    next.startsWith("/join/") || next.startsWith("/groups/") ? next : "";
+
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type: "email",
+  });
+
+  if (error) {
+    console.error("OTP verify hiba:", error.message);
+    const params = new URLSearchParams({ email, error: "invalid_code" });
+    if (safeNext) params.set("next", safeNext);
+    redirect(`/login/check-email?${params.toString()}`);
+  }
+
+  // Nickname ellenőrzés — ha még nincs, setup oldalra
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    const { data: profile } = await supabase
+      .from("users")
+      .select("nickname")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile?.nickname) {
+      redirect("/setup");
+    }
+  }
+
+  redirect(safeNext || "/groups");
 }
 
 // Nickname validáció: 2-30 karakter

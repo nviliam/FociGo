@@ -112,7 +112,9 @@ export default async function LoginPage({ searchParams }: Props) {
             >
               {error === "invalid_email"
                 ? "Érvénytelen email cím."
-                : "Bejelentkezés sikertelen."}
+                : error === "rate_limit"
+                  ? "Túl sok bejelentkezési kísérlet. Várj néhány percet, majd próbáld újra."
+                  : "Bejelentkezés sikertelen."}
             </div>
           )}
 
@@ -190,7 +192,7 @@ export default async function LoginPage({ searchParams }: Props) {
           >
             {next && <input type="hidden" name="next" value={next} />}
             <label htmlFor="email" className="label">
-              Belépés email linkkel
+              Belépés email kóddal
             </label>
             <input
               id="email"
@@ -205,7 +207,7 @@ export default async function LoginPage({ searchParams }: Props) {
               className="btn-primary"
               style={{ width: "100%", textAlign: "center" }}
             >
-              Magic link küldése
+              Kód küldése emailben
             </button>
           </form>
         </div>

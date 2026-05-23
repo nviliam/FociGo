@@ -44,7 +44,10 @@ export async function GET(request: NextRequest) {
 
     if (exchangeError) {
       console.error("Session exchange hiba:", exchangeError.message);
-      return NextResponse.redirect(`${origin}/login?error=session_failed`);
+      // PKCE verifier hiányzik → a linket más böngészőből/eszközről nyitották meg
+      const isPkceError = exchangeError.message.includes("code verifier");
+      const errorCode = isPkceError ? "wrong_browser" : "session_failed";
+      return NextResponse.redirect(`${origin}/login?error=${errorCode}`);
     }
   } else {
     // Sem code, sem token_hash → váratlan eset
