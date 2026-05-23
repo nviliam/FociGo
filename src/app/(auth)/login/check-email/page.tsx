@@ -43,7 +43,7 @@ function CheckEmailForm() {
         >
           Küldtünk egy{" "}
           <strong style={{ color: "var(--text-primary)" }}>
-            6-jegyű kódot
+            bejelentkezési kódot
           </strong>{" "}
           a <span style={{ color: "var(--accent)" }}>{email}</span> címre. Írd
           be ide:
@@ -75,11 +75,11 @@ function CheckEmailForm() {
             name="token"
             type="text"
             inputMode="numeric"
-            pattern="[0-9]{6}"
-            maxLength={6}
+            pattern="[0-9]{6,8}"
+            maxLength={8}
             required
             autoFocus
-            placeholder="123456"
+            placeholder="12345678"
             className="input-field"
             style={{
               textAlign: "center",
