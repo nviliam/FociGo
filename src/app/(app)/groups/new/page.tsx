@@ -27,16 +27,6 @@ export default function NewGroupPage() {
       >
         Új csoport
       </h1>
-      <p
-        style={{
-          color: "var(--text-secondary)",
-          fontSize: "0.85rem",
-          marginBottom: "2rem",
-        }}
-      >
-        A default beállítások minden új meccsnél előtöltődnek — meccs szinten
-        felülírhatók.
-      </p>
       <div
         style={{
           background: "var(--bg-card)",

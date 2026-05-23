@@ -35,56 +35,56 @@ export default function CreateGroupForm() {
     >
       <div>
         <label htmlFor="name" className="label">
-          Csoport neve <span style={{ color: "var(--accent)" }}>*</span>
+          Név <span style={{ color: "var(--accent)" }}>*</span>
         </label>
         <input
           id="name"
           name="name"
           type="text"
           required
-          placeholder="pl. Szerda esti foci"
+          placeholder="Fociláz"
           className="input-field"
         />
       </div>
 
       <div>
         <label htmlFor="default_venue" className="label">
-          Default helyszín{" "}
-          <span style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>
-            (opcionális)
-          </span>
+          Helyszín{" "}
+          <span
+            style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}
+          ></span>
         </label>
         <input
           id="default_venue"
           name="default_venue"
           type="text"
-          placeholder="pl. Sportcsarnok Pécs"
+          placeholder="BME Sportközpont"
           className="input-field"
         />
       </div>
 
       <div>
         <label htmlFor="default_schedule" className="label">
-          Default menetrend{" "}
-          <span style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>
-            (opcionális)
-          </span>
+          Időszak{" "}
+          <span
+            style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}
+          ></span>
         </label>
         <input
           id="default_schedule"
           name="default_schedule"
           type="text"
-          placeholder="pl. minden szerda 18:00"
+          placeholder="szerda 18:00-19:30"
           className="input-field"
         />
       </div>
 
       <div>
         <label htmlFor="default_venue_fee" className="label">
-          Default terembérlési díj (Ft){" "}
-          <span style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>
-            (opcionális)
-          </span>
+          Terembérlési díj (Ft){" "}
+          <span
+            style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}
+          ></span>
         </label>
         <input
           id="default_venue_fee"
@@ -92,7 +92,7 @@ export default function CreateGroupForm() {
           type="number"
           min="0"
           step="1"
-          placeholder="pl. 10000"
+          placeholder="20000"
           className="input-field"
         />
       </div>
