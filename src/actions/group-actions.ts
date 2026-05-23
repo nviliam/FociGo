@@ -128,6 +128,17 @@ export async function joinGroupByToken(formData: FormData) {
   } = await supabase.auth.getUser();
   if (!user) redirect(`/login?next=/join/${token}`);
 
+  // Ha nincs users sor (setup kimaradt), irányítás a nickname beállításhoz
+  const { data: profile } = await supabase
+    .from("users")
+    .select("nickname")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile?.nickname) {
+    redirect(`/setup?next=/join/${token}`);
+  }
+
   const { data, error } = await supabase.rpc("join_group_by_invite_token", {
     p_token: token,
   });

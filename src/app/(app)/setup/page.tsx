@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { updateNickname } from "@/actions/auth-actions";
 
 type Props = {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; next?: string }>;
 };
 
 export default async function SetupPage({ searchParams }: Props) {
@@ -28,7 +28,7 @@ export default async function SetupPage({ searchParams }: Props) {
     redirect("/groups");
   }
 
-  const { error } = await searchParams;
+  const { error, next } = await searchParams;
 
   return (
     <div
@@ -125,6 +125,7 @@ export default async function SetupPage({ searchParams }: Props) {
             action={updateNickname}
             style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}
           >
+            {next && <input type="hidden" name="next" value={next} />}
             <label htmlFor="nickname" className="label">
               Nickname
             </label>

@@ -120,16 +120,23 @@ export async function verifyOtpCode(formData: FormData) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (user) {
-    const { data: profile } = await supabase
-      .from("users")
-      .select("nickname")
-      .eq("id", user.id)
-      .single();
+  // Ha a session nem jött létre (ritka edge case), küldjük vissza loginra
+  if (!user) {
+    const params = new URLSearchParams({ email, error: "session_failed" });
+    if (safeNext) params.set("next", safeNext);
+    redirect(`/login/check-email?${params.toString()}`);
+  }
 
-    if (!profile?.nickname) {
-      redirect("/setup");
-    }
+  const { data: profile } = await supabase
+    .from("users")
+    .select("nickname")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile?.nickname) {
+    const setupParams = new URLSearchParams();
+    if (safeNext) setupParams.set("next", safeNext);
+    redirect(`/setup${setupParams.size ? `?${setupParams.toString()}` : ""}`);
   }
 
   redirect(safeNext || "/groups");
@@ -149,12 +156,17 @@ const NicknameSchema = z.object({
  */
 export async function updateNickname(formData: FormData) {
   const nickname = formData.get("nickname");
+  const next = formData.get("next")?.toString() ?? "";
+  const safeNext =
+    next.startsWith("/join/") || next.startsWith("/groups/") ? next : "";
 
   const validated = NicknameSchema.safeParse({ nickname });
   if (!validated.success) {
     const message =
       validated.error.issues[0]?.message ?? "Ervenytelen nickname";
-    redirect(`/setup?error=${encodeURIComponent(message)}`);
+    const params = new URLSearchParams({ error: message });
+    if (safeNext) params.set("next", safeNext);
+    redirect(`/setup?${params.toString()}`);
   }
 
   const supabase = await createClient();
@@ -183,10 +195,12 @@ export async function updateNickname(formData: FormData) {
       error.code,
       error.details,
     );
-    redirect(`/setup?error=${encodeURIComponent(error.message)}`);
+    const params = new URLSearchParams({ error: error.message });
+    if (safeNext) params.set("next", safeNext);
+    redirect(`/setup?${params.toString()}`);
   }
 
-  redirect("/groups");
+  redirect(safeNext || "/groups");
 }
 
 /**

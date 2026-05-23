@@ -58,9 +58,9 @@ BEGIN
 
   -- Ellenőrizzük, hogy már tag-e
   SELECT EXISTS(
-    SELECT 1 FROM public.group_members
-    WHERE group_id = v_group_id
-      AND user_id  = auth.uid()
+    SELECT 1 FROM public.group_members gm
+    WHERE gm.group_id = v_group_id
+      AND gm.user_id  = auth.uid()
   ) INTO v_is_member;
 
   -- Csak akkor adjuk hozzá, ha még nem tag
