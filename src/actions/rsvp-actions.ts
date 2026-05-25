@@ -73,6 +73,7 @@ export async function upsertRsvp(matchId: string, status: RsvpStatus) {
   }
 
   revalidatePath(`/groups/${match.group_id}/matches/${matchId}`);
+  revalidatePath(`/groups/${match.group_id}`);
   return { success: true };
 }
 
@@ -116,6 +117,7 @@ export async function deleteRsvp(matchId: string) {
   }
 
   revalidatePath(`/groups/${match.group_id}/matches/${matchId}`);
+  revalidatePath(`/groups/${match.group_id}`);
   return { success: true };
 }
 
@@ -263,7 +265,7 @@ export async function guestRsvp(
 
   const { data: match } = await supabase
     .from("matches")
-    .select("public_token, rsvp_deadline")
+    .select("public_token, rsvp_deadline, group_id")
     .eq("id", matchId)
     .single();
 
@@ -286,6 +288,8 @@ export async function guestRsvp(
   }
 
   revalidatePath(`/match/${match.public_token}`);
+  revalidatePath(`/groups/${match.group_id}/matches/${matchId}`);
+  revalidatePath(`/groups/${match.group_id}`);
   return { success: true };
 }
 
