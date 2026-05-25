@@ -1,3 +1,48 @@
+FociGo is a Next.js web application that helps groups of friends organize football matches, manage teams, send invites, and track RSVPs. The goal is to make community sports event organization simple and transparent.
+
+## Main Features
+
+- Create and manage groups
+- Organize, edit, and delete matches
+- Generate invite links, handle guest RSVPs
+- Transfer admin rights
+- Real-time RSVP updates
+
+## Tech Stack
+
+- Next.js (React, App Router)
+- TypeScript
+- Supabase (database, authentication, real-time)
+- Tailwind CSS (styling)
+- ESLint, Prettier (code quality)
+
+## Getting Started
+
+1. Install dependencies:
+	```bash
+	npm install
+	```
+2. Start the development server:
+	```bash
+	npm run dev
+	```
+3. (Optional) Set up Supabase environment variables in a `.env.local` file.
+
+## Key Folders
+
+- `src/app/` – Pages and routes
+- `src/components/` – Reusable components
+- `src/lib/` – Supabase client, validation
+- `src/types/` – Type definitions
+- `supabase/` – Database migrations, seed
+
+## Database
+
+Supabase migrations are in `supabase/migrations/`. Seed data is in `supabase/seed.sql`.
+
+## Contributing
+
+Pull requests and bug reports are welcome!
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
@@ -20,17 +65,3 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
