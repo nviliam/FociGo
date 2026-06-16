@@ -33,7 +33,6 @@ export type Match = {
   venue: string;
   match_date: string; // ISO 8601
   venue_fee: number; // egész szám fillérben
-  rsvp_deadline: string | null; // ISO 8601
   public_token: string;
   created_at: string;
 };

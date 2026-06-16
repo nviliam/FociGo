@@ -6,7 +6,6 @@ import type { RsvpStatus } from "@/types";
 
 type Props = {
   matchId: string;
-  isDeadlinePassed: boolean;
 };
 
 /**
@@ -24,7 +23,7 @@ type Props = {
  *
  * Ugyanolyan névvel újra elküldve: frissíti a státuszt (upsert).
  */
-export function GuestRsvpForm({ matchId, isDeadlinePassed }: Props) {
+export function GuestRsvpForm({ matchId }: Props) {
   const [name, setName] = useState("");
   const [submitted, setSubmitted] = useState<{
     name: string;
@@ -32,22 +31,6 @@ export function GuestRsvpForm({ matchId, isDeadlinePassed }: Props) {
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-
-  if (isDeadlinePassed) {
-    return (
-      <p
-        style={{
-          color: "var(--text-muted)",
-          fontSize: "0.85rem",
-          fontStyle: "italic",
-          textAlign: "center",
-          padding: "0.5rem 0",
-        }}
-      >
-        Az RSVP határidő lejárt, visszajelzés már nem adható.
-      </p>
-    );
-  }
 
   function handleRsvp(status: RsvpStatus) {
     if (!name.trim()) {

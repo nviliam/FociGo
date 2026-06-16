@@ -91,20 +91,6 @@ export default async function MatchDetailPage({ params }: Props) {
     },
   );
 
-  const rsvpDeadlineFormatted = match.rsvp_deadline
-    ? new Date(match.rsvp_deadline).toLocaleString("hu-HU", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : null;
-
-  // Lejárt-e az RSVP határidő?
-  const rsvpExpired =
-    match.rsvp_deadline && new Date(match.rsvp_deadline) < new Date();
-
   // Terembér Ft-ban
   const venueFeeFormatted =
     match.venue_fee > 0
@@ -215,7 +201,7 @@ export default async function MatchDetailPage({ params }: Props) {
         {[
           { label: "Időpont", value: matchDateFormatted },
           {
-            label: "Terembér",
+            label: "Teljes bérleti díj",
             value: venueFeeFormatted,
             accent: match.venue_fee > 0,
           },
@@ -248,38 +234,6 @@ export default async function MatchDetailPage({ params }: Props) {
             </p>
           </div>
         ))}
-        <div
-          style={{
-            padding: "1rem 1.25rem",
-            borderTop: "1px solid var(--border)",
-          }}
-        >
-          <p
-            style={{
-              fontSize: "0.7rem",
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-              color: "var(--text-muted)",
-              marginBottom: "0.3rem",
-            }}
-          >
-            RSVP határidő
-          </p>
-          {rsvpDeadlineFormatted ? (
-            <div
-              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-            >
-              <p style={{ fontWeight: 600, color: "var(--text-primary)" }}>
-                {rsvpDeadlineFormatted}
-              </p>
-              {rsvpExpired && <span className="badge-notgoing">Lejárt</span>}
-            </div>
-          ) : (
-            <p style={{ color: "var(--text-muted)", fontStyle: "italic" }}>
-              Nincs beállítva
-            </p>
-          )}
-        </div>
       </div>
 
       {/* RSVP szekció */}
@@ -308,7 +262,6 @@ export default async function MatchDetailPage({ params }: Props) {
           <RsvpButtons
             matchId={matchId}
             initialStatus={myRsvpStatus}
-            isDeadlinePassed={!!rsvpExpired}
           />
         )}
 
@@ -318,7 +271,6 @@ export default async function MatchDetailPage({ params }: Props) {
           initialRsvps={rsvps}
           initialGuestRsvps={guestRsvps}
           currentUserId={user?.id ?? null}
-          isDeadlinePassed={!!rsvpExpired}
         />
       </div>
 

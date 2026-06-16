@@ -81,7 +81,7 @@ export default function CreateGroupForm() {
 
       <div>
         <label htmlFor="default_venue_fee" className="label">
-          Terembérlési díj (Ft){" "}
+          Teljes bérleti díj (Ft){" "}
           <span
             style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}
           ></span>

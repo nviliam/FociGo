@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import { getMatchByPublicToken } from "@/actions/match-actions";
 import {
   getRsvpsByMatchPublic,
@@ -76,19 +77,6 @@ export default async function PublicMatchPage({ params }: Props) {
     },
   );
 
-  const rsvpDeadlineFormatted = match.rsvp_deadline
-    ? new Date(match.rsvp_deadline).toLocaleString("hu-HU", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : null;
-
-  const rsvpExpired =
-    match.rsvp_deadline && new Date(match.rsvp_deadline) < new Date();
-
   const venueFeeFormatted =
     match.venue_fee > 0
       ? `${match.venue_fee.toLocaleString("hu-HU")} Ft`
@@ -108,7 +96,15 @@ export default async function PublicMatchPage({ params }: Props) {
       >
         {/* FociGo brand fejléc */}
         <div style={{ textAlign: "center", marginBottom: "1rem" }}>
-          <div style={{ fontSize: "2rem", marginBottom: "0.25rem" }}>⚽</div>
+          <div
+            style={{
+              marginBottom: "0.5rem",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Image src="/logo1.png" alt="FociGo logo" width={72} height={72} />
+          </div>
           <h1
             style={{
               fontSize: "1.5rem",
@@ -172,7 +168,7 @@ export default async function PublicMatchPage({ params }: Props) {
           {[
             { label: "Időpont", value: matchDateFormatted },
             {
-              label: "Terembér",
+              label: "Teljes bérleti díj",
               value: venueFeeFormatted,
               accent: match.venue_fee > 0,
             },
@@ -205,38 +201,6 @@ export default async function PublicMatchPage({ params }: Props) {
               </p>
             </div>
           ))}
-          <div
-            style={{
-              padding: "1rem 1.25rem",
-              borderTop: "1px solid var(--border)",
-            }}
-          >
-            <p
-              style={{
-                fontSize: "0.7rem",
-                textTransform: "uppercase",
-                letterSpacing: "0.08em",
-                color: "var(--text-muted)",
-                marginBottom: "0.3rem",
-              }}
-            >
-              RSVP határidő
-            </p>
-            {rsvpDeadlineFormatted ? (
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-              >
-                <p style={{ fontWeight: 600, color: "var(--text-primary)" }}>
-                  {rsvpDeadlineFormatted}
-                </p>
-                {rsvpExpired && <span className="badge-notgoing">Lejárt</span>}
-              </div>
-            ) : (
-              <p style={{ color: "var(--text-muted)", fontStyle: "italic" }}>
-                Nincs beállítva
-              </p>
-            )}
-          </div>
         </div>
 
         {/* RSVP szekció */}
@@ -310,9 +274,6 @@ export default async function PublicMatchPage({ params }: Props) {
                       ).toLocaleString("hu-HU")}{" "}
                       Ft / fő
                     </span>
-                    {rsvpExpired && (
-                      <span className="badge-going">Végleges ár</span>
-                    )}
                   </div>
                 )}
             </div>
@@ -378,7 +339,7 @@ export default async function PublicMatchPage({ params }: Props) {
           >
             📋 Visszajelzés
           </h2>
-          <GuestRsvpForm matchId={match.id} isDeadlinePassed={!!rsvpExpired} />
+          <GuestRsvpForm matchId={match.id} />
         </div>
 
         {/* Login CTA — aki csatlakozni szeretne a csoporthoz */}

@@ -7,7 +7,6 @@ import type { RsvpStatus } from "@/types";
 type Props = {
   matchId: string;
   initialStatus: RsvpStatus | null; // null = még nem jelzett vissza
-  isDeadlinePassed: boolean; // határidő lejárt-e?
 };
 
 /**
@@ -33,7 +32,6 @@ type Props = {
 export function RsvpButtons({
   matchId,
   initialStatus,
-  isDeadlinePassed,
 }: Props) {
   const [status, setStatus] = useState<RsvpStatus | null>(initialStatus);
   const [error, setError] = useState<string | null>(null);
@@ -66,34 +64,6 @@ export function RsvpButtons({
         setError(result.error);
       }
     });
-  }
-
-  // Lejárt határidő esetén csak infó jelenik meg
-  if (isDeadlinePassed) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "0.75rem",
-          padding: "0.5rem 0",
-        }}
-      >
-        <span
-          style={{
-            fontSize: "0.8rem",
-            color: "var(--text-muted)",
-            fontStyle: "italic",
-          }}
-        >
-          Visszajelzés lezárva
-        </span>
-        {status === "going" && <span className="badge-going">✓ Jövök</span>}
-        {status === "not_going" && (
-          <span className="badge-notgoing">✗ Nem jövök</span>
-        )}
-      </div>
-    );
   }
 
   return (

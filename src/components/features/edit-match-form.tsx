@@ -56,7 +56,6 @@ export default function EditMatchForm({ groupId, match }: Props) {
       venue: formData.get("venue"),
       match_date: formData.get("match_date"),
       venue_fee: formData.get("venue_fee") || undefined,
-      rsvp_deadline: formData.get("rsvp_deadline") || undefined,
     };
 
     const result = await updateMatch(groupId, match.id, data);
@@ -104,7 +103,7 @@ export default function EditMatchForm({ groupId, match }: Props) {
 
       <div>
         <label htmlFor="venue_fee" className="label">
-          Terembér (Ft){" "}
+          Teljes bérleti díj (Ft){" "}
           <span style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>
             (opcionális)
           </span>
@@ -123,31 +122,6 @@ export default function EditMatchForm({ groupId, match }: Props) {
           placeholder="pl. 10000"
           className="input-field"
         />
-      </div>
-
-      <div>
-        <label htmlFor="rsvp_deadline" className="label">
-          RSVP határidő{" "}
-          <span style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>
-            (opcionális)
-          </span>
-        </label>
-        <input
-          id="rsvp_deadline"
-          name="rsvp_deadline"
-          type="datetime-local"
-          defaultValue={toLocalDatetimeInput(match.rsvp_deadline)}
-          className="input-field"
-        />
-        <p
-          style={{
-            fontSize: "0.72rem",
-            color: "var(--text-muted)",
-            marginTop: "0.35rem",
-          }}
-        >
-          A határidő után a visszajelzések lezárulnak és az ár rögzül.
-        </p>
       </div>
 
       {error && (

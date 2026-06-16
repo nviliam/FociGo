@@ -25,7 +25,6 @@ type Props = {
   initialRsvps: RsvpEntry[]; // szerver oldali initial adat
   initialGuestRsvps: GuestRsvpEntry[]; // vendég visszajelzések
   currentUserId: string | null; // aktuális user — saját bejegyzés kiemeléshez
-  isDeadlinePassed: boolean; // határidő lejárt-e
 };
 
 /**
@@ -66,7 +65,6 @@ export function RsvpList({
   initialRsvps,
   initialGuestRsvps,
   currentUserId,
-  isDeadlinePassed,
 }: Props) {
   const [rsvps, setRsvps] = useState<RsvpEntry[]>(initialRsvps);
   const [guestRsvps, setGuestRsvps] =
@@ -215,9 +213,6 @@ export function RsvpList({
                   ? `${pricePerPerson.toLocaleString("hu-HU")} Ft / fő`
                   : "– Ft / fő"}
               </span>
-              {isDeadlinePassed && (
-                <span className="badge-going">Végleges ár</span>
-              )}
             </div>
           )}
         </div>

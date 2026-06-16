@@ -36,7 +36,7 @@ export async function upsertRsvp(matchId: string, status: RsvpStatus) {
   // Tagság ellenőrzés — Defense in depth (RLS is ellenőrzi, de szerver oldalon is)
   const { data: match } = await supabase
     .from("matches")
-    .select("group_id, rsvp_deadline")
+    .select("group_id")
     .eq("id", matchId)
     .single();
 
@@ -52,11 +52,6 @@ export async function upsertRsvp(matchId: string, status: RsvpStatus) {
 
   if (!membership)
     return { error: "Csak csoporttag adhat vissza visszajelzést." };
-
-  // Határidő ellenőrzés (AC4) — RLS is ellenőrzi, de szerveren is
-  if (match.rsvp_deadline && new Date(match.rsvp_deadline) < new Date()) {
-    return { error: "Az RSVP határidő lejárt, nem lehet módosítani." };
-  }
 
   // UPSERT — randomUUID előre, nincs .select()
   const id = randomUUID();
@@ -94,16 +89,11 @@ export async function deleteRsvp(matchId: string) {
 
   const { data: match } = await supabase
     .from("matches")
-    .select("group_id, rsvp_deadline")
+    .select("group_id")
     .eq("id", matchId)
     .single();
 
   if (!match) return { error: "A meccs nem található." };
-
-  // Határidő ellenőrzés
-  if (match.rsvp_deadline && new Date(match.rsvp_deadline) < new Date()) {
-    return { error: "Az RSVP határidő lejárt, nem lehet visszavonni." };
-  }
 
   const { error } = await supabase
     .from("rsvps")
@@ -265,15 +255,11 @@ export async function guestRsvp(
 
   const { data: match } = await supabase
     .from("matches")
-    .select("public_token, rsvp_deadline, group_id")
+    .select("public_token, group_id")
     .eq("id", matchId)
     .single();
 
   if (!match) return { error: "A meccs nem található." };
-
-  if (match.rsvp_deadline && new Date(match.rsvp_deadline) < new Date()) {
-    return { error: "Az RSVP határidő lejárt." };
-  }
 
   const { error: upsertError } = await supabase
     .from("guest_rsvps")

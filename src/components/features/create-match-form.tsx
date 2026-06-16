@@ -46,7 +46,6 @@ export default function CreateMatchForm({
       venue: formData.get("venue"),
       match_date: formData.get("match_date"),
       venue_fee: formData.get("venue_fee") || undefined,
-      rsvp_deadline: formData.get("rsvp_deadline") || undefined,
     };
 
     const result = await createMatch(groupId, data);
@@ -94,7 +93,7 @@ export default function CreateMatchForm({
 
       <div>
         <label htmlFor="venue_fee" className="label">
-          Terembér (Ft){" "}
+          Teljes bérleti díj (Ft){" "}
           <span style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>
             (opcionális)
           </span>

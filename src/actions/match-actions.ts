@@ -49,11 +49,7 @@ export async function createMatch(groupId: string, data: unknown) {
     };
   }
 
-  const { venue, match_date, venue_fee, rsvp_deadline } = validated.data;
-
-  // rsvp_deadline string → Date konverzió (ha meg van adva)
-  const rsvpDeadlineDate =
-    rsvp_deadline && rsvp_deadline.length > 0 ? new Date(rsvp_deadline) : null;
+  const { venue, match_date, venue_fee } = validated.data;
 
   // 4. Meccs létrehozása (UUID előre generálva — PG15 RLS csapda elkerülése)
   const matchId = randomUUID();
@@ -64,7 +60,6 @@ export async function createMatch(groupId: string, data: unknown) {
     venue,
     match_date: match_date.toISOString(),
     venue_fee: venue_fee ?? 0,
-    rsvp_deadline: rsvpDeadlineDate ? rsvpDeadlineDate.toISOString() : null,
   });
 
   if (insertError) {
@@ -171,9 +166,7 @@ export async function updateMatch(
     };
   }
 
-  const { venue, match_date, venue_fee, rsvp_deadline } = validated.data;
-  const rsvpDeadlineDate =
-    rsvp_deadline && rsvp_deadline.length > 0 ? new Date(rsvp_deadline) : null;
+  const { venue, match_date, venue_fee } = validated.data;
 
   // 4. UPDATE — nincs .select(), nincs PG15 RLS csapda
   const { error: updateError } = await supabase
@@ -182,7 +175,6 @@ export async function updateMatch(
       venue,
       match_date: match_date.toISOString(),
       venue_fee: venue_fee ?? 0,
-      rsvp_deadline: rsvpDeadlineDate ? rsvpDeadlineDate.toISOString() : null,
     })
     .eq("id", matchId);
 

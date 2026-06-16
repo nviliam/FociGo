@@ -130,7 +130,7 @@ export default async function GroupDetailPage({ params }: Props) {
               </p>
             )}
             <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>
-              💰 Terembér:{" "}
+              💰 Teljes bérleti díj:{" "}
               <span style={{ color: "var(--accent)", fontWeight: 600 }}>
                 {venueFeeDisplay}
               </span>

@@ -7,7 +7,6 @@ import { z } from "zod";
  * - venue: helyszín (kötelező)
  * - match_date: meccs dátuma és időpontja (kötelező, datetime-local input)
  * - venue_fee: terembér fillérben (opcionális, egész szám)
- * - rsvp_deadline: RSVP határidő (opcionális, datetime-local input)
  */
 export const CreateMatchSchema = z.object({
   venue: z
@@ -31,18 +30,6 @@ export const CreateMatchSchema = z.object({
     .int("A terembér egész szám kell legyen")
     .min(0, "A terembér nem lehet negatív")
     .optional(),
-
-  rsvp_deadline: z
-    .string()
-    .optional()
-    .refine(
-      (v) => {
-        if (!v || v.length === 0) return true; // üres → rendben
-        const d = new Date(v);
-        return !isNaN(d.getTime()) && d > new Date();
-      },
-      { message: "Az RSVP határidő nem lehet múltbeli" },
-    ),
 });
 
 export type CreateMatchInput = z.infer<typeof CreateMatchSchema>;
