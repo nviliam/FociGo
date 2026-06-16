@@ -282,28 +282,6 @@ export default async function MatchDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Meccs link megosztása */}
-      <div
-        style={{
-          background: "var(--bg-card)",
-          border: "1px solid var(--border)",
-          borderRadius: "1.25rem",
-          padding: "1.25rem",
-        }}
-      >
-        <h2
-          style={{
-            fontSize: "0.9rem",
-            fontWeight: 700,
-            color: "var(--text-primary)",
-            marginBottom: "0.75rem",
-          }}
-        >
-          📤 Meccs link megosztása
-        </h2>
-        <MatchShareButton matchUrl={matchPublicUrl} />
-      </div>
-
       {/* RSVP szekció */}
       <div
         style={{
@@ -342,6 +320,28 @@ export default async function MatchDetailPage({ params }: Props) {
           currentUserId={user?.id ?? null}
           isDeadlinePassed={!!rsvpExpired}
         />
+      </div>
+
+      {/* Meccs link megosztása */}
+      <div
+        style={{
+          background: "var(--bg-card)",
+          border: "1px solid var(--border)",
+          borderRadius: "1.25rem",
+          padding: "1.25rem",
+        }}
+      >
+        <h2
+          style={{
+            fontSize: "0.9rem",
+            fontWeight: 700,
+            color: "var(--text-primary)",
+            marginBottom: "0.75rem",
+          }}
+        >
+          📤 Meccs link megosztása
+        </h2>
+        <MatchShareButton matchUrl={matchPublicUrl} />
       </div>
     </div>
   );

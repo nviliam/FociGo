@@ -157,30 +157,100 @@ export default async function GroupDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Meghívó link — csak adminnak */}
-      {isAdmin && (
-        <div
+      {/* Tagok listája */}
+      <div
+        style={{
+          background: "var(--bg-card)",
+          border: "1px solid var(--border)",
+          borderRadius: "1.25rem",
+          padding: "1.5rem",
+          marginBottom: "1.25rem",
+        }}
+      >
+        <h2
           style={{
-            background: "var(--bg-card)",
-            border: "1px solid var(--border)",
-            borderRadius: "1.25rem",
-            padding: "1.5rem",
-            marginBottom: "1.25rem",
+            fontSize: "0.95rem",
+            fontWeight: 700,
+            color: "var(--text-primary)",
+            marginBottom: "1rem",
           }}
         >
-          <h2
-            style={{
-              fontSize: "0.95rem",
-              fontWeight: 700,
-              color: "var(--text-primary)",
-              marginBottom: "0.75rem",
-            }}
-          >
-            🔗 Meghívó link a csoportba
-          </h2>
-          <InviteLinkButton inviteUrl={inviteUrl} />
-        </div>
-      )}
+          👥 Tagok ({members.length})
+        </h2>
+        {members.length === 0 ? (
+          <p style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>
+            Nincsenek tagok.
+          </p>
+        ) : (
+          <ul style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+            {members.map((member, i) => (
+              <li
+                key={member.user_id}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "0.75rem 0",
+                  borderTop: i > 0 ? "1px solid var(--border)" : "none",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "0.9rem",
+                    fontWeight: 500,
+                    color: "var(--text-primary)",
+                  }}
+                >
+                  {member.users?.nickname ?? "Ismeretlen"}
+                  {member.user_id === user?.id && (
+                    <span
+                      style={{
+                        fontSize: "0.75rem",
+                        color: "var(--text-muted)",
+                        marginLeft: "0.35rem",
+                      }}
+                    >
+                      (én)
+                    </span>
+                  )}
+                </span>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  {member.is_admin && (
+                    <span
+                      style={{
+                        fontSize: "0.68rem",
+                        fontWeight: 700,
+                        letterSpacing: "0.06em",
+                        textTransform: "uppercase",
+                        background: "var(--accent-glow)",
+                        color: "var(--accent)",
+                        border: "1px solid var(--accent-border)",
+                        padding: "0.15rem 0.5rem",
+                        borderRadius: "9999px",
+                      }}
+                    >
+                      Admin
+                    </span>
+                  )}
+                  {isAdmin && !member.is_admin && (
+                    <TransferAdminButton
+                      groupId={id}
+                      targetUserId={member.user_id}
+                      targetNickname={member.users?.nickname ?? "Ismeretlen"}
+                    />
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
       {/* Meccsek listája */}
       <div
@@ -361,99 +431,29 @@ export default async function GroupDetailPage({ params }: Props) {
         )}
       </div>
 
-      {/* Tagok listája */}
-      <div
-        style={{
-          background: "var(--bg-card)",
-          border: "1px solid var(--border)",
-          borderRadius: "1.25rem",
-          padding: "1.5rem",
-        }}
-      >
-        <h2
+      {/* Meghívó link — csak adminnak, legalul */}
+      {isAdmin && (
+        <div
           style={{
-            fontSize: "0.95rem",
-            fontWeight: 700,
-            color: "var(--text-primary)",
-            marginBottom: "1rem",
+            background: "var(--bg-card)",
+            border: "1px solid var(--border)",
+            borderRadius: "1.25rem",
+            padding: "1.5rem",
           }}
         >
-          👥 Tagok ({members.length})
-        </h2>
-        {members.length === 0 ? (
-          <p style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>
-            Nincsenek tagok.
-          </p>
-        ) : (
-          <ul style={{ display: "flex", flexDirection: "column", gap: "0" }}>
-            {members.map((member, i) => (
-              <li
-                key={member.user_id}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "0.75rem 0",
-                  borderTop: i > 0 ? "1px solid var(--border)" : "none",
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: "0.9rem",
-                    fontWeight: 500,
-                    color: "var(--text-primary)",
-                  }}
-                >
-                  {member.users?.nickname ?? "Ismeretlen"}
-                  {member.user_id === user?.id && (
-                    <span
-                      style={{
-                        fontSize: "0.75rem",
-                        color: "var(--text-muted)",
-                        marginLeft: "0.35rem",
-                      }}
-                    >
-                      (én)
-                    </span>
-                  )}
-                </span>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
-                >
-                  {member.is_admin && (
-                    <span
-                      style={{
-                        fontSize: "0.68rem",
-                        fontWeight: 700,
-                        letterSpacing: "0.06em",
-                        textTransform: "uppercase",
-                        background: "var(--accent-glow)",
-                        color: "var(--accent)",
-                        border: "1px solid var(--accent-border)",
-                        padding: "0.15rem 0.5rem",
-                        borderRadius: "9999px",
-                      }}
-                    >
-                      Admin
-                    </span>
-                  )}
-                  {isAdmin && !member.is_admin && (
-                    <TransferAdminButton
-                      groupId={id}
-                      targetUserId={member.user_id}
-                      targetNickname={member.users?.nickname ?? "Ismeretlen"}
-                    />
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+          <h2
+            style={{
+              fontSize: "0.95rem",
+              fontWeight: 700,
+              color: "var(--text-primary)",
+              marginBottom: "0.75rem",
+            }}
+          >
+            🔗 Meghívó link a csoportba
+          </h2>
+          <InviteLinkButton inviteUrl={inviteUrl} />
+        </div>
+      )}
     </div>
   );
 }
