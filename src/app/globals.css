@@ -178,6 +178,102 @@ body {
   letter-spacing: 0.02em;
 }
 
+/* ---- Reszponzív segédosztályok ---- */
+
+/* Oldal tartalom wrapper — mobil padding, asztali max-width */
+.page-wrapper {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .page-wrapper {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* Oldalfejléc — cím + gomb sor */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 640px) {
+  .page-header {
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+}
+
+/* Adat-sor párok (pl. meccs adatok) */
+.data-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+@media (min-width: 480px) {
+  .data-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+}
+
+.data-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.data-value {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Gombok mobilon teljes szélesség */
+.btn-full-mobile {
+  width: 100%;
+}
+
+@media (min-width: 480px) {
+  .btn-full-mobile {
+    width: auto;
+  }
+}
+
+/* Touch target minimum magasság */
+.btn-primary,
+.btn-secondary {
+  min-height: 44px;
+}
+
+/* Táblázat-szerű listák mobil scroll */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Navbar nickname — rejtve mobilon, látható 480px+ */
+.navbar-nickname {
+  display: none;
+}
+
+@media (min-width: 480px) {
+  .navbar-nickname {
+    display: inline;
+  }
+}
+
 .badge-notgoing {
   background: var(--notgoing-bg);
   color: var(--notgoing-text);

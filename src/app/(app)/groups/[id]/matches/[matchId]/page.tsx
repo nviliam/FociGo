@@ -99,14 +99,8 @@ export default async function MatchDetailPage({ params }: Props) {
 
   return (
     <div
-      style={{
-        maxWidth: "40rem",
-        margin: "0 auto",
-        padding: "2rem 1rem",
-        display: "flex",
-        flexDirection: "column",
-        gap: "1.25rem",
-      }}
+      className="page-wrapper"
+      style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}
     >
       {/* Fejléc */}
       <div
@@ -115,6 +109,7 @@ export default async function MatchDetailPage({ params }: Props) {
           alignItems: "flex-start",
           justifyContent: "space-between",
           gap: "1rem",
+          flexWrap: "wrap",
         }}
       >
         <div>
@@ -142,7 +137,7 @@ export default async function MatchDetailPage({ params }: Props) {
           </h1>
         </div>
         {isAdmin && (
-          <div style={{ display: "flex", gap: "0.5rem", flexShrink: 0 }}>
+          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
             <Link
               href={`/groups/${groupId}/matches/${matchId}/edit`}
               className="btn-secondary"
@@ -259,10 +254,7 @@ export default async function MatchDetailPage({ params }: Props) {
         </h2>
 
         {isMember && (
-          <RsvpButtons
-            matchId={matchId}
-            initialStatus={myRsvpStatus}
-          />
+          <RsvpButtons matchId={matchId} initialStatus={myRsvpStatus} />
         )}
 
         <RsvpList

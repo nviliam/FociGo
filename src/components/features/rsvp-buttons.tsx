@@ -29,10 +29,7 @@ type Props = {
  * - Ha "Jövök"-re kattint és más státusz (vagy nincs) → UPSERT 'going'
  * - Ugyanez "Nem jövök"-re
  */
-export function RsvpButtons({
-  matchId,
-  initialStatus,
-}: Props) {
+export function RsvpButtons({ matchId, initialStatus }: Props) {
   const [status, setStatus] = useState<RsvpStatus | null>(initialStatus);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();

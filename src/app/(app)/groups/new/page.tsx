@@ -3,7 +3,7 @@ import CreateGroupForm from "@/components/features/create-group-form";
 
 export default function NewGroupPage() {
   return (
-    <div style={{ maxWidth: "36rem", margin: "0 auto", padding: "2rem 1rem" }}>
+    <div className="page-wrapper" style={{ maxWidth: "36rem" }}>
       <Link
         href="/groups"
         style={{

@@ -41,7 +41,7 @@ export default async function NewMatchPage({ params }: Props) {
   };
 
   return (
-    <div style={{ maxWidth: "36rem", margin: "0 auto", padding: "2rem 1rem" }}>
+    <div className="page-wrapper" style={{ maxWidth: "36rem" }}>
       <a
         href={`/groups/${id}`}
         style={{

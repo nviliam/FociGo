@@ -63,7 +63,7 @@ export default async function GroupDetailPage({ params }: Props) {
   const venueFeeDisplay = venueFee != null ? `${venueFee} Ft` : "—";
 
   return (
-    <div style={{ maxWidth: "44rem", margin: "0 auto", padding: "2rem 1rem" }}>
+    <div className="page-wrapper" style={{ maxWidth: "44rem" }}>
       <Link
         href="/groups"
         style={{

@@ -6,16 +6,9 @@ export default async function GroupsPage() {
   const memberships = await getUserGroups();
 
   return (
-    <div style={{ maxWidth: "40rem", margin: "0 auto", padding: "2rem 1rem" }}>
+    <div className="page-wrapper">
       {/* Fejléc */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: "2rem",
-        }}
-      >
+      <div className="page-header">
         <div>
           <h1
             style={{

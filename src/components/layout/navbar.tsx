@@ -72,9 +72,8 @@ export async function Navbar() {
               style={{
                 fontSize: "0.8rem",
                 color: "var(--text-secondary)",
-                display: "none",
               }}
-              className="sm-inline"
+              className="navbar-nickname"
             >
               {nickname}
             </span>

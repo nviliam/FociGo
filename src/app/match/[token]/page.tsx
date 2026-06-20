@@ -85,10 +85,9 @@ export default async function PublicMatchPage({ params }: Props) {
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg-base)" }}>
       <div
+        className="page-wrapper"
         style={{
           maxWidth: "40rem",
-          margin: "0 auto",
-          padding: "3rem 1rem",
           display: "flex",
           flexDirection: "column",
           gap: "1.25rem",
