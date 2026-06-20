@@ -4,8 +4,9 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 
-// Az URL ahol az app fut — Vercel-en automatikusan beállítódik, lokálisan localhost
+// Az URL ahol az app fut — NEXT_PUBLIC_APP_URL elsőbbséget élvez
 const getBaseUrl = () => {
+  if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   return "http://localhost:3000";
 };
