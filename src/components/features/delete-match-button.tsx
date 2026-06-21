@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { deleteMatch } from "@/actions/match-actions";
+import { Spinner } from "@/components/ui/spinner";
 
 type Props = {
   groupId: string;
@@ -44,9 +45,12 @@ export function DeleteMatchButton({ groupId, matchId }: Props) {
           opacity: isPending ? 0.5 : 1,
           transition: "all 0.15s",
           flexShrink: 0,
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "0.4rem",
         }}
       >
-        {isPending ? "Törlés..." : "🗑 Törlés"}
+        {isPending ? <><Spinner size="0.8rem" /> Törlés...</> : "🗑 Törlés"}
       </button>
       {error && (
         <p

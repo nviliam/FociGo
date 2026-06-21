@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createGroup } from "@/actions/group-actions";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function CreateGroupForm() {
   const [error, setError] = useState<string | null>(null);
@@ -116,9 +117,9 @@ export default function CreateGroupForm() {
         type="submit"
         disabled={isPending}
         className="btn-primary"
-        style={{ width: "100%", textAlign: "center" }}
+        style={{ width: "100%", textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }}
       >
-        {isPending ? "Létrehozás..." : "Csoport létrehozása"}
+        {isPending ? <><Spinner /> Létrehozás...</> : "Csoport létrehozása"}
       </button>
     </form>
   );

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createMatch } from "@/actions/match-actions";
+import { Spinner } from "@/components/ui/spinner";
 
 type Props = {
   groupId: string;
@@ -156,7 +157,7 @@ export default function CreateMatchForm({
           className="btn-primary"
           style={{ flex: 1, textAlign: "center" }}
         >
-          {isPending ? "Mentés..." : "Meccs létrehozása"}
+          {isPending ? <><Spinner /> Mentés...</> : "Meccs létrehozása"}
         </button>
         <a
           href={`/groups/${groupId}`}

@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { transferAdmin } from "@/actions/group-actions";
+import { Spinner } from "@/components/ui/spinner";
 
 type Props = {
   groupId: string;
@@ -65,7 +66,7 @@ export function TransferAdminButton({
           transition: "all 0.15s",
         }}
       >
-        {isPending ? "Átruházás..." : "Admin átruházás"}
+        {isPending ? <><Spinner size="0.75rem" /> Átruházás...</> : "Admin átruházás"}
       </button>
       {error && (
         <p

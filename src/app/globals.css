@@ -167,6 +167,26 @@ body {
   box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
+/* ---- Spinner ---- */
+
+@keyframes foci-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border: 2px solid rgba(0, 230, 118, 0.2);
+  border-top-color: #00e676;
+  border-radius: 50%;
+  animation: foci-spin 0.65s linear infinite;
+  box-shadow: 0 0 6px rgba(0, 230, 118, 0.35);
+  flex-shrink: 0;
+}
+
 .badge-going {
   background: var(--going-bg);
   color: var(--going-text);

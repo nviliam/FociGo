@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { deleteGroup } from "@/actions/group-actions";
+import { Spinner } from "@/components/ui/spinner";
 
 type Props = {
   groupId: string;
@@ -50,7 +51,7 @@ export function DeleteGroupButton({ groupId, groupName }: Props) {
           whiteSpace: "nowrap",
         }}
       >
-        {isPending ? "Törlés..." : "🗑 Törlés"}
+        {isPending ? <><Spinner size="0.75rem" /> Törlés...</> : "🗑 Törlés"}
       </button>
       {error && (
         <p
