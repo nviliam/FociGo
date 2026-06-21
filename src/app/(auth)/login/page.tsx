@@ -1,5 +1,6 @@
 ﻿import Image from "next/image";
 import { signInWithGoogle, signInWithMagicLink } from "@/actions/auth-actions";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 type Props = {
   searchParams: Promise<{ error?: string; next?: string }>;
@@ -111,14 +112,10 @@ export default async function LoginPage({ searchParams }: Props) {
           {/* Google gomb */}
           <form action={signInWithGoogle}>
             {next && <input type="hidden" name="next" value={next} />}
-            <button
-              type="submit"
+            <SubmitButton
+              pendingText="Átirányítás..."
               style={{
                 width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "0.75rem",
                 background: "rgba(255,255,255,0.06)",
                 border: "1px solid var(--border)",
                 borderRadius: "0.75rem",
@@ -153,7 +150,7 @@ export default async function LoginPage({ searchParams }: Props) {
                 />
               </svg>
               Belépés Google-lal
-            </button>
+            </SubmitButton>
           </form>
 
           <div
@@ -196,13 +193,13 @@ export default async function LoginPage({ searchParams }: Props) {
               required
               className="input-field"
             />
-            <button
-              type="submit"
+            <SubmitButton
               className="btn-primary"
-              style={{ width: "100%", textAlign: "center" }}
+              pendingText="Küldés..."
+              style={{ width: "100%" }}
             >
               Kód küldése emailben
-            </button>
+            </SubmitButton>
           </form>
         </div>
 

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { updateMatch } from "@/actions/match-actions";
+import { Spinner } from "@/components/ui/spinner";
 import type { Match } from "@/types";
 
 type Props = {
@@ -144,9 +145,22 @@ export default function EditMatchForm({ groupId, match }: Props) {
           type="submit"
           disabled={isPending}
           className="btn-primary"
-          style={{ flex: 1, textAlign: "center" }}
+          style={{
+            flex: 1,
+            textAlign: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "0.5rem",
+          }}
         >
-          {isPending ? "Mentés..." : "Változtatások mentése"}
+          {isPending ? (
+            <>
+              <Spinner /> Mentés...
+            </>
+          ) : (
+            "Változtatások mentése"
+          )}
         </button>
         <a
           href={`/groups/${groupId}/matches/${match.id}`}

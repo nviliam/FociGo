@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { verifyOtpCode } from "@/actions/auth-actions";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 function CheckEmailForm() {
   const searchParams = useSearchParams();
@@ -87,13 +88,13 @@ function CheckEmailForm() {
               letterSpacing: "0.3em",
             }}
           />
-          <button
-            type="submit"
+          <SubmitButton
             className="btn-primary"
-            style={{ width: "100%", textAlign: "center" }}
+            pendingText="Ellenőrzés..."
+            style={{ width: "100%" }}
           >
             Belépés
-          </button>
+          </SubmitButton>
         </form>
 
         <a

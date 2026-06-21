@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { guestRsvp } from "@/actions/rsvp-actions";
+import { Spinner } from "@/components/ui/spinner";
 import type { RsvpStatus } from "@/types";
 
 type Props = {
@@ -127,7 +128,7 @@ export function GuestRsvpForm({ matchId }: Props) {
             opacity: isPending ? 0.5 : 1,
           }}
         >
-          {isPending ? "..." : "✓ Jövök"}
+          {isPending ? <Spinner /> : "✓ Jövök"}
         </button>
         <button
           onClick={() => handleRsvp("not_going")}
@@ -146,7 +147,7 @@ export function GuestRsvpForm({ matchId }: Props) {
             opacity: isPending ? 0.5 : 1,
           }}
         >
-          {isPending ? "..." : "✗ Nem jövök"}
+          {isPending ? <Spinner /> : "✗ Nem jövök"}
         </button>
       </div>
       {error && <p style={{ fontSize: "0.8rem", color: "#ef4444" }}>{error}</p>}

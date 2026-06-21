@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { joinGroupByToken } from "@/actions/group-actions";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 type Props = {
   params: Promise<{ token: string }>;
@@ -157,13 +158,13 @@ export default async function JoinPage({ params }: Props) {
           {user ? (
             <form action={joinGroupByToken}>
               <input type="hidden" name="token" value={token} />
-              <button
-                type="submit"
+              <SubmitButton
                 className="btn-primary"
-                style={{ width: "100%", textAlign: "center" }}
+                pendingText="Csatlakozás..."
+                style={{ width: "100%" }}
               >
                 Csatlakozás
-              </button>
+              </SubmitButton>
             </form>
           ) : (
             <a

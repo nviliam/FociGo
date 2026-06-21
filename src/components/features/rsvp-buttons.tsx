@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { upsertRsvp, deleteRsvp } from "@/actions/rsvp-actions";
+import { Spinner } from "@/components/ui/spinner";
 import type { RsvpStatus } from "@/types";
 
 type Props = {
@@ -90,9 +91,13 @@ export function RsvpButtons({ matchId, groupId, initialStatus }: Props) {
             boxShadow:
               status === "going" ? "0 0 16px rgba(0,230,118,0.2)" : "none",
             opacity: isPending ? 0.5 : 1,
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "0.4rem",
           }}
         >
-          ✓ Jövök
+          {isPending ? <Spinner size="0.9rem" /> : "✓"} Jövök
         </button>
         <button
           onClick={() => handleRsvp("not_going")}
@@ -120,9 +125,13 @@ export function RsvpButtons({ matchId, groupId, initialStatus }: Props) {
                 ? "0 0 16px rgba(255,107,107,0.2)"
                 : "none",
             opacity: isPending ? 0.5 : 1,
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "0.4rem",
           }}
         >
-          ✗ Nem jövök
+          {isPending ? <Spinner size="0.9rem" /> : "✗"} Nem jövök
         </button>
       </div>
 
