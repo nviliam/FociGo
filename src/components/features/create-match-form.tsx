@@ -111,30 +111,6 @@ export default function CreateMatchForm({
         />
       </div>
 
-      <div>
-        <label htmlFor="rsvp_deadline" className="label">
-          RSVP határidő{" "}
-          <span style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>
-            (opcionális)
-          </span>
-        </label>
-        <input
-          id="rsvp_deadline"
-          name="rsvp_deadline"
-          type="datetime-local"
-          className="input-field"
-        />
-        <p
-          style={{
-            fontSize: "0.72rem",
-            color: "var(--text-muted)",
-            marginTop: "0.35rem",
-          }}
-        >
-          A határidő után a visszajelzések lezárulnak és az ár rögzül.
-        </p>
-      </div>
-
       {error && (
         <div
           style={{
