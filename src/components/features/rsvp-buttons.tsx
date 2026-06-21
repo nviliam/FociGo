@@ -6,6 +6,7 @@ import type { RsvpStatus } from "@/types";
 
 type Props = {
   matchId: string;
+  groupId: string;
   initialStatus: RsvpStatus | null; // null = még nem jelzett vissza
 };
 
@@ -29,7 +30,7 @@ type Props = {
  * - Ha "Jövök"-re kattint és más státusz (vagy nincs) → UPSERT 'going'
  * - Ugyanez "Nem jövök"-re
  */
-export function RsvpButtons({ matchId, initialStatus }: Props) {
+export function RsvpButtons({ matchId, groupId, initialStatus }: Props) {
   const [status, setStatus] = useState<RsvpStatus | null>(initialStatus);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -50,9 +51,9 @@ export function RsvpButtons({ matchId, initialStatus }: Props) {
     startTransition(async () => {
       let result;
       if (isToggle) {
-        result = await deleteRsvp(matchId);
+        result = await deleteRsvp(matchId, groupId);
       } else {
-        result = await upsertRsvp(matchId, clicked);
+        result = await upsertRsvp(matchId, groupId, clicked);
       }
 
       if (result?.error) {

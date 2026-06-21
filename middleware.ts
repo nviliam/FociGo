@@ -54,17 +54,30 @@ export async function middleware(request: NextRequest) {
   }
 
   // Ha be van jelentkezve de nincs nickname → /setup
-  // (kivéve ha már a /setup oldalon van)
+  // A "has_profile" cookie cache-eli az eredményt — csak az első kérésnél
+  // (vagy ha a cookie lejárt) kell DB-t kérdezni.
   if (user && pathname !== "/setup" && !isPublicRoute(pathname)) {
-    const { data: profile } = await supabase
-      .from("users")
-      .select("nickname")
-      .eq("id", user.id)
-      .single();
+    const hasProfile = request.cookies.get("has_profile")?.value === "1";
 
-    if (!profile?.nickname) {
-      const setupUrl = new URL("/setup", request.url);
-      return NextResponse.redirect(setupUrl);
+    if (!hasProfile) {
+      const { data: profile } = await supabase
+        .from("users")
+        .select("nickname")
+        .eq("id", user.id)
+        .single();
+
+      if (!profile?.nickname) {
+        const setupUrl = new URL("/setup", request.url);
+        return NextResponse.redirect(setupUrl);
+      }
+
+      // Nickname megerősítve — következő kéréseknél kihagyjuk a DB hívást
+      response.cookies.set("has_profile", "1", {
+        httpOnly: true,
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24 * 7, // 7 nap
+        path: "/",
+      });
     }
   }
 

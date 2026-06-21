@@ -25,7 +25,11 @@ import type { RsvpStatus } from "@/types";
  * onConflict: "match_id,user_id" — ha létezik már sor ezzel
  * a kombinációval, az UPDATE futtatja a status frissítést.
  */
-export async function upsertRsvp(matchId: string, status: RsvpStatus) {
+export async function upsertRsvp(
+  matchId: string,
+  groupId: string,
+  status: RsvpStatus,
+) {
   const supabase = await createClient();
 
   const {
@@ -33,27 +37,8 @@ export async function upsertRsvp(matchId: string, status: RsvpStatus) {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  // Tagság ellenőrzés — Defense in depth (RLS is ellenőrzi, de szerver oldalon is)
-  const { data: match } = await supabase
-    .from("matches")
-    .select("group_id")
-    .eq("id", matchId)
-    .single();
-
-  if (!match) return { error: "A meccs nem található." };
-
-  // Tagság ellenőrzés
-  const { data: membership } = await supabase
-    .from("group_members")
-    .select("id")
-    .eq("group_id", match.group_id)
-    .eq("user_id", user.id)
-    .single();
-
-  if (!membership)
-    return { error: "Csak csoporttag adhat vissza visszajelzést." };
-
-  // UPSERT — randomUUID előre, nincs .select()
+  // A tagság- és meccs-ellenőrzést az RLS policy végzi az adatbázisban —
+  // szerver action szintű duplikálása elhagyható.
   const id = randomUUID();
   const { error } = await supabase
     .from("rsvps")
@@ -67,8 +52,8 @@ export async function upsertRsvp(matchId: string, status: RsvpStatus) {
     return { error: "A visszajelzés mentése sikertelen. Próbáld újra!" };
   }
 
-  revalidatePath(`/groups/${match.group_id}/matches/${matchId}`);
-  revalidatePath(`/groups/${match.group_id}`);
+  revalidatePath(`/groups/${groupId}/matches/${matchId}`);
+  revalidatePath(`/groups/${groupId}`);
   return { success: true };
 }
 
@@ -79,21 +64,13 @@ export async function upsertRsvp(matchId: string, status: RsvpStatus) {
  * Ha a user ugyanarra a gombra kattint, amelyik már aktív
  * (toggle viselkedés — pl. "Jövök"-re kattint, de már "Jövök" van → törlés)
  */
-export async function deleteRsvp(matchId: string) {
+export async function deleteRsvp(matchId: string, groupId: string) {
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
-
-  const { data: match } = await supabase
-    .from("matches")
-    .select("group_id")
-    .eq("id", matchId)
-    .single();
-
-  if (!match) return { error: "A meccs nem található." };
 
   const { error } = await supabase
     .from("rsvps")
@@ -106,8 +83,8 @@ export async function deleteRsvp(matchId: string) {
     return { error: "A visszajelzés törlése sikertelen. Próbáld újra!" };
   }
 
-  revalidatePath(`/groups/${match.group_id}/matches/${matchId}`);
-  revalidatePath(`/groups/${match.group_id}`);
+  revalidatePath(`/groups/${groupId}/matches/${matchId}`);
+  revalidatePath(`/groups/${groupId}`);
   return { success: true };
 }
 

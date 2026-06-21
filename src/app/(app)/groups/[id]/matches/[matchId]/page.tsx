@@ -254,7 +254,11 @@ export default async function MatchDetailPage({ params }: Props) {
         </h2>
 
         {isMember && (
-          <RsvpButtons matchId={matchId} initialStatus={myRsvpStatus} />
+          <RsvpButtons
+            matchId={matchId}
+            groupId={groupId}
+            initialStatus={myRsvpStatus}
+          />
         )}
 
         <RsvpList

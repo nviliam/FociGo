@@ -1,5 +1,6 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
@@ -201,6 +202,15 @@ export async function updateNickname(formData: FormData) {
     redirect(`/setup?${params.toString()}`);
   }
 
+  // Cookie beállítása — a middleware ezután kihagyja a DB nickname-ellenőrzést
+  const cookieStore = await cookies();
+  cookieStore.set("has_profile", "1", {
+    httpOnly: true,
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24 * 7, // 7 nap
+    path: "/",
+  });
+
   redirect(safeNext || "/groups");
 }
 
@@ -210,5 +220,8 @@ export async function updateNickname(formData: FormData) {
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
+  // Cookie törlése — következő bejelentkezésnél újra ellenőrzött legyen a nickname
+  const cookieStore = await cookies();
+  cookieStore.delete("has_profile");
   redirect("/login");
 }
