@@ -60,7 +60,7 @@ export default async function LoginPage({ searchParams }: Props) {
             FociGo
           </h1>
           <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem" }}>
-            Szervezd meg a következő meccset!
+            Kevesebb szervezés, több kötény.
           </p>
         </div>
 
@@ -75,7 +75,7 @@ export default async function LoginPage({ searchParams }: Props) {
               "0 0 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03)",
           }}
         >
-          <h2
+          {/* <h2
             style={{
               fontSize: "1.1rem",
               fontWeight: 600,
@@ -85,17 +85,7 @@ export default async function LoginPage({ searchParams }: Props) {
             }}
           >
             Bejelentkezés
-          </h2>
-          <p
-            style={{
-              color: "var(--text-secondary)",
-              fontSize: "0.82rem",
-              textAlign: "center",
-              marginBottom: "1.75rem",
-            }}
-          >
-            Lépj be a csapatod meccseinek szervezéséhez
-          </p>
+          </h2> */}
 
           {error && (
             <div
@@ -191,14 +181,18 @@ export default async function LoginPage({ searchParams }: Props) {
             style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}
           >
             {next && <input type="hidden" name="next" value={next} />}
-            <label htmlFor="email" className="label">
-              Belépés email kóddal
+            <label
+              htmlFor="email"
+              className="label"
+              style={{ width: "100%", textAlign: "center" }}
+            >
+              Email kóddal
             </label>
             <input
               id="email"
               name="email"
               type="email"
-              placeholder="nev@example.com"
+              placeholder="nev@email.com"
               required
               className="input-field"
             />
