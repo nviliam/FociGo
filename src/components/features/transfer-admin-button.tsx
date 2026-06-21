@@ -66,7 +66,13 @@ export function TransferAdminButton({
           transition: "all 0.15s",
         }}
       >
-        {isPending ? <><Spinner size="0.75rem" /> Átruházás...</> : "Admin átruházás"}
+        {isPending ? (
+          <>
+            <Spinner size="0.75rem" /> Átruházás...
+          </>
+        ) : (
+          "Admin átruházás"
+        )}
       </button>
       {error && (
         <p

@@ -157,7 +157,13 @@ export default function CreateMatchForm({
           className="btn-primary"
           style={{ flex: 1, textAlign: "center" }}
         >
-          {isPending ? <><Spinner /> Mentés...</> : "Meccs létrehozása"}
+          {isPending ? (
+            <>
+              <Spinner /> Mentés...
+            </>
+          ) : (
+            "Meccs létrehozása"
+          )}
         </button>
         <a
           href={`/groups/${groupId}`}

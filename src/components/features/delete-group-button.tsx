@@ -51,7 +51,13 @@ export function DeleteGroupButton({ groupId, groupName }: Props) {
           whiteSpace: "nowrap",
         }}
       >
-        {isPending ? <><Spinner size="0.75rem" /> Törlés...</> : "🗑 Törlés"}
+        {isPending ? (
+          <>
+            <Spinner size="0.75rem" /> Törlés...
+          </>
+        ) : (
+          "🗑 Törlés"
+        )}
       </button>
       {error && (
         <p

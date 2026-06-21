@@ -50,7 +50,13 @@ export function DeleteMatchButton({ groupId, matchId }: Props) {
           gap: "0.4rem",
         }}
       >
-        {isPending ? <><Spinner size="0.8rem" /> Törlés...</> : "🗑 Törlés"}
+        {isPending ? (
+          <>
+            <Spinner size="0.8rem" /> Törlés...
+          </>
+        ) : (
+          "🗑 Törlés"
+        )}
       </button>
       {error && (
         <p
