@@ -56,7 +56,7 @@ export default async function GroupDetailPage({ params }: Props) {
     (process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}`
       : "http://localhost:3000");
-  const inviteUrl = `${baseUrl}/join/${(group as { invite_token: string }).invite_token}`;
+  const inviteUrl = `${baseUrl}/join/${(group as { short_invite_token: string }).short_invite_token}`;
 
   // Terembér Ft-ban (integer fillér → Ft osztás 100-al)
   const venueFee = (group as { default_venue_fee?: number }).default_venue_fee;

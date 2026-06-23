@@ -76,7 +76,7 @@ export default async function MatchDetailPage({ params }: Props) {
     (process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}`
       : "http://localhost:3000");
-  const matchPublicUrl = `${baseUrl}/match/${match.public_token}`;
+  const matchPublicUrl = `${baseUrl}/match/${match.short_public_token}`;
 
   // Dátum formázás — helyi időzónában, olvasható formátumban
   const matchDateFormatted = new Date(match.match_date).toLocaleString(

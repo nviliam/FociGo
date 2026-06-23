@@ -208,7 +208,7 @@ export async function getMatchByPublicToken(token: string) {
   const { data, error } = await supabase
     .from("matches")
     .select("*")
-    .eq("public_token", token)
+    .eq("short_public_token", token)
     .single();
 
   if (error) {

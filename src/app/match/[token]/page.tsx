@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import type { Metadata } from "next";
 import { getMatchByPublicToken } from "@/actions/match-actions";
 import {
   getRsvpsByMatchPublic,
@@ -10,6 +11,30 @@ import { GuestRsvpForm } from "@/components/features/guest-rsvp-form";
 type Props = {
   params: Promise<{ token: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { token } = await params;
+  const match = await getMatchByPublicToken(token);
+  if (!match) return { title: "Meccs nem található — FociGo" };
+
+  const date = new Date(match.match_date).toLocaleString("hu-HU", {
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  return {
+    title: `⚽ ${match.venue} — ${date} | FociGo`,
+    description: `Jelezd vissza, hogy jössz-e! ${match.venue}, ${date}`,
+    openGraph: {
+      title: `⚽ ${match.venue} — ${date}`,
+      description: `Kattints és jelezd vissza részvételed a FociGo-ban!`,
+      type: "website",
+      siteName: "FociGo",
+    },
+  };
+}
 
 /**
  * Nyilvános meccs oldal

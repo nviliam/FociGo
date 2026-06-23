@@ -34,6 +34,7 @@ export type Match = {
   match_date: string; // ISO 8601
   venue_fee: number; // egész szám fillérben
   public_token: string;
+  short_public_token: string;
   created_at: string;
 };
 
