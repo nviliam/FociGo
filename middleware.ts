@@ -36,12 +36,11 @@ export async function middleware(request: NextRequest) {
     },
   );
 
-  // Session lekérése cookie-ból — hálózati hívás nélkül.
-  // A routing döntésekhez elegendő; az adatbiztonságot a DB szintű RLS garantálja.
+  // Felhasználó lekérése — szerver oldali validációval, biztonságosabb mint getSession().
+  // Érvénytelen/lejárt refresh token esetén null-t ad vissza hibát dobás helyett.
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  const user = session?.user ?? null;
+    data: { user },
+  } = await supabase.auth.getUser();
 
   // Ha védett route és nincs session → /login
   if (!isPublicRoute(pathname) && !user) {

@@ -65,15 +65,6 @@ export default async function NewMatchPage({ params }: Props) {
       >
         Új meccs
       </h1>
-      <p
-        style={{
-          color: "var(--text-secondary)",
-          fontSize: "0.85rem",
-          marginBottom: "2rem",
-        }}
-      >
-        A csoport default értékei előtöltve — minden mező felülírható.
-      </p>
       <div
         style={{
           background: "var(--bg-card)",
