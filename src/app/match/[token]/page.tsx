@@ -52,8 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * ezért nem kér autentikációt.
  *
  * Mit mutat ez az oldal?
- * - Meccs helyszíne, dátuma, terembére, RSVP határideje
- * - Lejárt-e az RSVP határidő (badge)
+ * - Meccs helyszíne, dátuma, terembére
  * - RSVP lista és fejenkénti ár: Epic 5-ben kerül ide
  * - Login link, ha valaki csatlakozni szeretne a csoporthoz
  *
