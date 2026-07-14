@@ -77,7 +77,7 @@ export default async function GroupDetailPage({ params }: Props) {
         ← Csoportjaim
       </Link>
 
-      {/* Csoport fejléc */}
+      {/* Csoportjaim fejléc */}
       <div
         style={{
           background: "var(--bg-card)",

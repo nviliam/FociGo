@@ -35,7 +35,8 @@ export default async function GroupsPage() {
           className="btn-primary"
           style={{
             textDecoration: "none",
-            display: "inline-block",
+            display: "inline-flex",
+            alignItems: "center",
             padding: "0.6rem 1.25rem",
             fontSize: "0.85rem",
           }}
