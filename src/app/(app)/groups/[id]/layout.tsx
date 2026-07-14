@@ -7,10 +7,10 @@ export default function GroupDetailLayout({
     <>
       <style>{`
         body {
-          background-color: #031510;
+          background-color: #031510 !important;
           background-image:
             linear-gradient(rgba(0, 230, 118, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 230, 118, 0.03) 1px, transparent 1px);
+            linear-gradient(90deg, rgba(0, 230, 118, 0.03) 1px, transparent 1px) !important;
         }
       `}</style>
       {children}

@@ -200,7 +200,7 @@ export default async function MatchDetailPage({ params }: Props) {
             value: venueFeeFormatted,
             accent: match.venue_fee > 0,
           },
-        ].map((row, i) => (
+        ].map((row) => (
           <div
             key={row.label}
             style={{
