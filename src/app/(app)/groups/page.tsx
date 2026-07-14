@@ -18,7 +18,7 @@ export default async function GroupsPage() {
               letterSpacing: "-0.03em",
             }}
           >
-            Csoportok
+            Csoportjaim
           </h1>
           <p
             style={{
