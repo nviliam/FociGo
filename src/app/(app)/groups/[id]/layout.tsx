@@ -8,8 +8,8 @@ export default function GroupDetailLayout({
   return (
     <>
       <PageTheme
-        backgroundColor="#031510"
-        gridColor="rgba(0, 230, 118, 0.03)"
+        backgroundColor="#400000"
+        gridColor="rgba(255, 0, 0, 0.05)"
       />
       {children}
     </>
