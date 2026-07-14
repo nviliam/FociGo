@@ -8,8 +8,8 @@ export default function MatchDetailLayout({
   return (
     <>
       <PageTheme
-        backgroundColor="#060416"
-        gridColor="rgba(80, 140, 255, 0.025)"
+        backgroundColor="#08041a"
+        gridColor="rgba(100, 140, 255, 0.03)"
       />
       {children}
     </>

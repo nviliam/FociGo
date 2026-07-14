@@ -7,7 +7,7 @@ export default function GroupDetailLayout({
 }) {
   return (
     <>
-      <PageTheme backgroundColor="#400000" gridColor="rgba(255, 0, 0, 0.05)" />
+      <PageTheme backgroundColor="#041a0d" gridColor="rgba(0, 230, 118, 0.04)" />
       {children}
     </>
   );
