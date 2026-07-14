@@ -1,3 +1,5 @@
+import { PageTheme } from "@/components/layout/page-theme";
+
 export default function GroupDetailLayout({
   children,
 }: {
@@ -5,14 +7,10 @@ export default function GroupDetailLayout({
 }) {
   return (
     <>
-      <style>{`
-        body {
-          background-color: #031510 !important;
-          background-image:
-            linear-gradient(rgba(0, 230, 118, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 230, 118, 0.03) 1px, transparent 1px) !important;
-        }
-      `}</style>
+      <PageTheme
+        backgroundColor="#031510"
+        gridColor="rgba(0, 230, 118, 0.03)"
+      />
       {children}
     </>
   );

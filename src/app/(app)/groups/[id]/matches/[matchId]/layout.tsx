@@ -1,3 +1,5 @@
+import { PageTheme } from "@/components/layout/page-theme";
+
 export default function MatchDetailLayout({
   children,
 }: {
@@ -5,14 +7,10 @@ export default function MatchDetailLayout({
 }) {
   return (
     <>
-      <style>{`
-        body {
-          background-color: #060416 !important;
-          background-image:
-            linear-gradient(rgba(80, 140, 255, 0.025) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(80, 140, 255, 0.025) 1px, transparent 1px) !important;
-        }
-      `}</style>
+      <PageTheme
+        backgroundColor="#060416"
+        gridColor="rgba(80, 140, 255, 0.025)"
+      />
       {children}
     </>
   );
