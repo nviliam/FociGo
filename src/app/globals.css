@@ -74,6 +74,28 @@ body {
   min-height: 100vh;
 }
 
+/* ---- Oldal háttér árnyalatok ---- */
+
+/* Csoportos oldalak — halvány zöld alap (futballpálya érzet) */
+.page-bg-group {
+  background-color: #050e09;
+  background-image:
+    linear-gradient(rgba(0, 230, 118, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 230, 118, 0.02) 1px, transparent 1px);
+  background-size: 48px 48px;
+  min-height: 100vh;
+}
+
+/* Meccs oldalak — halvány kék/lila alap (stadion reflektorfény érzet) */
+.page-bg-match {
+  background-color: #06070f;
+  background-image:
+    linear-gradient(rgba(80, 140, 255, 0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(80, 140, 255, 0.012) 1px, transparent 1px);
+  background-size: 48px 48px;
+  min-height: 100vh;
+}
+
 /* ---- Segédosztályok ---- */
 
 .card {
