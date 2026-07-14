@@ -70,7 +70,7 @@ export function MatchShareButton({ matchUrl }: Props) {
         </button>
       </div>
       <p style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
-        Ez a link bejelentkezés nélkül is megtekinthető.
+        Ez a link bejelentkezés nélkül is megnyitható.
       </p>
     </div>
   );

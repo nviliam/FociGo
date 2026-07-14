@@ -133,7 +133,7 @@ export default async function MatchDetailPage({ params }: Props) {
               letterSpacing: "-0.03em",
             }}
           >
-            ⚽ Meccs
+            Aktuális meccs
           </h1>
         </div>
         {isAdmin && (
