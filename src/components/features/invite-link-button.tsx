@@ -66,8 +66,7 @@ export function InviteLinkButton({ inviteUrl }: Props) {
         </button>
       </div>
       <p style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
-        Ezt a linket küld el a barátaidnak. Megnyitva automatikusan csatlakoznak
-        a csoporthoz.
+        A barátaid ezzel a linkkel automatikusan csatlakozhatnak a csoporthoz.
       </p>
     </div>
   );
