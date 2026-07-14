@@ -74,40 +74,8 @@ body {
   min-height: 100vh;
 }
 
-/* ---- Oldal háttér árnyalatok ---- */
-/* position:fixed pseudo-elem lefedi a teljes viewport-ot, z-index:-1 marad a tartalom mögött */
-
-/* Csoportos oldalak — zöld alap (futballpálya érzet) */
-.page-bg-group {
-  position: relative;
-}
-.page-bg-group::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-color: #031510;
-  background-image:
-    linear-gradient(rgba(0, 230, 118, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 230, 118, 0.03) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
-
-/* Meccs oldalak — kék/lila alap (stadion reflektorfény érzet) */
-.page-bg-match {
-  position: relative;
-}
-.page-bg-match::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-color: #060416;
-  background-image:
-    linear-gradient(rgba(80, 140, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(80, 140, 255, 0.025) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
+/* Csoportos és meccs oldalak háttérszínét a layout.tsx fájlokban
+   inline <style> tag-gel állítjuk be, így felülírják a body alapját. */
 
 /* ---- Segédosztályok ---- */
 
