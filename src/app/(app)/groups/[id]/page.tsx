@@ -74,7 +74,7 @@ export default async function GroupDetailPage({ params }: Props) {
           marginBottom: "1.5rem",
         }}
       >
-        ← Csoportok
+        ← Csoportjaim
       </Link>
 
       {/* Csoport fejléc */}
