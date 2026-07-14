@@ -153,19 +153,30 @@ export async function getRsvpCountsByGroup(groupId: string) {
   if (!user) redirect("/login");
 
   // Lekérjük az összes RSVP-t a csoport meccseihez (join matches-en keresztül)
-  const { data, error } = await supabase
-    .from("rsvps")
-    .select("match_id, status, matches!inner(group_id)")
-    .eq("matches.group_id", groupId);
+  // + a vendég RSVP-ket is (guest_rsvps tábla) párhuzamosan
+  const [{ data, error }, { data: guestData, error: guestError }] =
+    await Promise.all([
+      supabase
+        .from("rsvps")
+        .select("match_id, status, matches!inner(group_id)")
+        .eq("matches.group_id", groupId),
+      supabase
+        .from("guest_rsvps")
+        .select("match_id, status, matches!inner(group_id)")
+        .eq("matches.group_id", groupId),
+    ]);
 
   if (error) {
     console.error("getRsvpCountsByGroup error:", error.message);
     return new Map<string, { going: number; notGoing: number }>();
   }
+  if (guestError) {
+    console.error("getRsvpCountsByGroup guest error:", guestError.message);
+  }
 
-  // Aggregálás JS-ben: match_id → {going, notGoing}
+  // Aggregálás JS-ben: match_id → {going, notGoing} (tag + vendég együtt)
   const counts = new Map<string, { going: number; notGoing: number }>();
-  for (const rsvp of data ?? []) {
+  for (const rsvp of [...(data ?? []), ...(guestData ?? [])]) {
     const entry = counts.get(rsvp.match_id) ?? { going: 0, notGoing: 0 };
     if (rsvp.status === "going") entry.going++;
     else entry.notGoing++;
