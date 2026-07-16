@@ -113,7 +113,7 @@ export default async function LoginPage({ searchParams }: Props) {
           <form action={signInWithGoogle}>
             {next && <input type="hidden" name="next" value={next} />}
             <SubmitButton
-              pendingText="Átirányítás..."
+              pendingText="Betöltés..."
               style={{
                 width: "100%",
                 background: "rgba(255,255,255,0.06)",
